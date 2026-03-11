@@ -19,6 +19,31 @@
           5つのセクション（合計100問）に回答すると、
           <strong>フルコード・正式名称・軸スコア</strong>を表示します。
         </p>
+
+        <section class="profile-form-wrap">
+          <h3>回答者情報（履歴管理用）</h3>
+          <div class="profile-grid">
+            <label>
+              名前（ニックネーム可）
+              <input id="respondent-name" type="text" maxlength="40" required placeholder="例: たろう" />
+            </label>
+            <label>
+              生年月日（必須）
+              <input id="respondent-birthdate" type="date" min="1900-01-01" max="2026-12-31" required />
+            </label>
+            <label>
+              性別
+              <select id="respondent-gender" required>
+                <option value="" selected disabled>選択してください</option>
+                <option value="男性">男性</option>
+                <option value="女性">女性</option>
+                <option value="自認回答">自認回答</option>
+              </select>
+            </label>
+          </div>
+          <p class="profile-note">※ 回答履歴は同じ回答者情報で紐づけます。</p>
+        </section>
+
         <ul>
           <li>回答は自動で保存され、途中再開できます。</li>
           <li>各セクションは全問回答で次へ進めます。</li>
@@ -54,7 +79,7 @@
 
         <div class="result-pager-controls">
           <button id="result-prev-btn" type="button" class="btn">← 前の結果</button>
-          <span id="result-page-indicator">1 / 6</span>
+          <span id="result-page-indicator">1 / 8</span>
           <button id="result-next-btn" type="button" class="btn primary">次の結果 →</button>
         </div>
 
@@ -64,6 +89,7 @@
               <p><strong>あなたのX-TYPEコード:</strong> <span id="full-code"></span></p>
               <p><strong>ベースコード:</strong> <span id="base-code"></span></p>
               <p><strong>正式名称:</strong> <span id="official-name"></span></p>
+              <p><strong>回答者:</strong> <span id="result-respondent"></span></p>
             </div>
             <h3>要約</h3>
             <p id="summary-text" class="summary"></p>
@@ -102,6 +128,25 @@
             <section class="result-block">
               <h3>X-TYPEの深い読み方</h3>
               <div id="deep-reading" class="deep-reading"></div>
+            </section>
+          </section>
+
+          <section class="result-slide" data-slide>
+            <section class="result-block">
+              <h3>あなたの回答・結果履歴</h3>
+              <div id="my-history-list" class="history-list"></div>
+            </section>
+          </section>
+
+          <section class="result-slide" data-slide>
+            <section class="result-block">
+              <h3>製作者専用: 回答データ一覧</h3>
+              <p class="profile-note">※ 製作者パスコード入力後に表示されます。</p>
+              <div class="admin-gate">
+                <input id="creator-passcode" type="password" placeholder="製作者パスコード" />
+                <button id="open-admin-btn" type="button" class="btn">データを表示</button>
+              </div>
+              <div id="creator-data-list" class="history-list"></div>
             </section>
           </section>
         </div>

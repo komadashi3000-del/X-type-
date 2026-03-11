@@ -417,3 +417,70 @@ body::after {
   bottom: 10vh;
   background: radial-gradient(circle at 38% 30%, rgba(196,245,255,0.85), rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 72%);
 }
+
+.profile-form-wrap {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  margin: 12px 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.45));
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.profile-grid label {
+  display: grid;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-grid input,
+.profile-grid select,
+.admin-gate input {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.8);
+  color: var(--text);
+}
+
+.profile-note {
+  color: var(--muted);
+  margin: 8px 0 0;
+}
+
+.history-list {
+  display: grid;
+  gap: 8px;
+}
+
+.history-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.46));
+}
+
+.admin-gate {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .admin-gate {
+    flex-direction: column;
+  }
+}

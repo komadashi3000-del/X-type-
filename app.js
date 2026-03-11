@@ -1,6 +1,8 @@
 // X-TYPE 診断テスト: 質問・採点・結果解説の一元管理
 (() => {
   const STORAGE_KEY = "xtype-test-state-v1";
+  const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
+  const CREATOR_PASSCODE = "xtype-creator-2026";
 
   const OPTIONS = [
     { label: "はい", value: 2 },
@@ -147,9 +149,18 @@
   const resultPrevBtn = document.getElementById("result-prev-btn");
   const resultNextBtn = document.getElementById("result-next-btn");
   const resultPageIndicator = document.getElementById("result-page-indicator");
+  const respondentNameInput = document.getElementById("respondent-name");
+  const respondentBirthInput = document.getElementById("respondent-birthdate");
+  const respondentGenderInput = document.getElementById("respondent-gender");
+  const openAdminBtn = document.getElementById("open-admin-btn");
+  const creatorPasscodeInput = document.getElementById("creator-passcode");
   let currentResultSlide = 0;
 
   document.getElementById("start-btn").addEventListener("click", () => {
+    const profile = collectRespondentProfile();
+    if (!profile) return;
+    state.profile = profile;
+    saveState();
     showQuiz();
     renderSection();
   });
@@ -162,9 +173,11 @@
     renderSection();
   });
   document.getElementById("reset-btn").addEventListener("click", resetAll);
+  openAdminBtn.addEventListener("click", renderCreatorData);
   resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
   resultNextBtn.addEventListener("click", () => moveResultSlide(1));
 
+  syncProfileInputs();
   if (state.completed) showResults();
 
   function renderSection() {
@@ -222,6 +235,9 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    const scores = computeScores(state.answers);
+    const type = determineType(scores);
+    persistHistory(scores, type);
     state.completed = true;
     saveState();
     showResults();
@@ -288,6 +304,7 @@
     document.getElementById("full-code").textContent = type.fullCode;
     document.getElementById("base-code").textContent = type.baseCode;
     document.getElementById("official-name").textContent = type.officialName;
+    document.getElementById("result-respondent").textContent = state.profile ? `${state.profile.name} / ${state.profile.birthDate} / ${state.profile.gender}` : "未設定";
 
     renderScoreMeters(scores, type);
     renderScoreList(scores, type);
@@ -295,6 +312,7 @@
     renderAxisDescriptions();
     renderTypeCatalog(type.baseCode);
     renderDeepReadings();
+    renderMyHistory();
 
     document.getElementById("summary-text").textContent = `あなたは「${firstCharSummary[type.first]}」。また末尾は「${type.fifth}」で、「${tailSummary[type.fifth]}」の方向性が強めです。`;
     initResultPager();
@@ -454,6 +472,7 @@
     state.answers = {};
     state.currentSection = 0;
     state.completed = false;
+    state.profile = null;
     showQuiz();
     renderSection();
   }
@@ -471,7 +490,7 @@
   }
 
   function loadState() {
-    const defaults = { answers: {}, currentSection: 0, completed: false };
+    const defaults = { answers: {}, currentSection: 0, completed: false, profile: null };
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return defaults;
@@ -479,11 +498,132 @@
       return {
         answers: parsed.answers ?? {},
         currentSection: Number.isInteger(parsed.currentSection) ? parsed.currentSection : 0,
-        completed: !!parsed.completed
+        completed: !!parsed.completed,
+        profile: parsed.profile ?? null
       };
     } catch {
       return defaults;
     }
+  }
+
+  function collectRespondentProfile() {
+    const name = respondentNameInput.value.trim();
+    const birthDate = respondentBirthInput.value;
+    const gender = respondentGenderInput.value;
+
+    if (!name) {
+      window.alert("名前（ニックネーム可）を入力してください。");
+      return null;
+    }
+    if (!birthDate) {
+      window.alert("生年月日は必須です。");
+      return null;
+    }
+    const year = Number(birthDate.slice(0, 4));
+    if (year < 1900 || year > 2026) {
+      window.alert("生年月日の年は1900〜2026の範囲で入力してください。");
+      return null;
+    }
+    if (!gender) {
+      window.alert("性別を選択してください。");
+      return null;
+    }
+
+    return { name, birthDate, gender };
+  }
+
+  function syncProfileInputs() {
+    if (!state.profile) return;
+    respondentNameInput.value = state.profile.name ?? "";
+    respondentBirthInput.value = state.profile.birthDate ?? "";
+    respondentGenderInput.value = state.profile.gender ?? "";
+  }
+
+  function profileKey(profile) {
+    return `${profile.name}__${profile.birthDate}__${profile.gender}`;
+  }
+
+  function loadHistoryStore() {
+    try {
+      const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
+      if (!raw) return { respondents: {} };
+      const parsed = JSON.parse(raw);
+      return { respondents: parsed.respondents ?? {} };
+    } catch {
+      return { respondents: {} };
+    }
+  }
+
+  function persistHistory(scores, type) {
+    if (!state.profile) return;
+    const store = loadHistoryStore();
+    const key = profileKey(state.profile);
+    if (!store.respondents[key]) {
+      store.respondents[key] = { profile: state.profile, entries: [] };
+    }
+
+    const entry = {
+      id: `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+      createdAt: new Date().toISOString(),
+      fullCode: type.fullCode,
+      baseCode: type.baseCode,
+      officialName: type.officialName,
+      scores,
+      answers: state.answers
+    };
+    store.respondents[key].entries.push(entry);
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(store));
+  }
+
+  function renderMyHistory() {
+    const container = document.getElementById("my-history-list");
+    container.innerHTML = "";
+    if (!state.profile) {
+      container.innerHTML = '<p>回答者情報が見つかりません。</p>';
+      return;
+    }
+    const store = loadHistoryStore();
+    const key = profileKey(state.profile);
+    const entries = (store.respondents[key]?.entries ?? []).slice().reverse();
+    if (!entries.length) {
+      container.innerHTML = '<p>履歴はまだありません。</p>';
+      return;
+    }
+    entries.forEach((entry) => {
+      const el = document.createElement("article");
+      el.className = "history-item";
+      el.innerHTML = `<p><strong>${new Date(entry.createdAt).toLocaleString("ja-JP")}</strong></p>
+        <p>コード: ${entry.fullCode}（${entry.officialName}）</p>
+        <p>AFN: A=${entry.scores.AFN.A.toFixed(1)} / F=${entry.scores.AFN.F.toFixed(1)} / N=${entry.scores.AFN.N.toFixed(1)}</p>`;
+      container.appendChild(el);
+    });
+  }
+
+  function renderCreatorData() {
+    const container = document.getElementById("creator-data-list");
+    container.innerHTML = "";
+    if (creatorPasscodeInput.value !== CREATOR_PASSCODE) {
+      window.alert("製作者パスコードが違います。");
+      return;
+    }
+    const store = loadHistoryStore();
+    const respondents = Object.values(store.respondents);
+    if (!respondents.length) {
+      container.innerHTML = '<p>保存データはありません。</p>';
+      return;
+    }
+
+    respondents.forEach((row) => {
+      row.entries.forEach((entry) => {
+        const item = document.createElement("article");
+        item.className = "history-item";
+        item.innerHTML = `<p><strong>${new Date(entry.createdAt).toLocaleString("ja-JP")}</strong></p>
+          <p>回答者: ${row.profile.name} / ${row.profile.birthDate} / ${row.profile.gender}</p>
+          <p>結果: ${entry.fullCode}（${entry.officialName}）</p>
+          <details><summary>回答データ（100問）</summary><pre>${JSON.stringify(entry.answers, null, 2)}</pre></details>`;
+        container.appendChild(item);
+      });
+    });
   }
 
   function saveState() {
