@@ -2,7 +2,7 @@
 (() => {
   const STORAGE_KEY = "xtype-test-state-v1";
   const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
-  const CREATOR_PASSCODE = "xtype-creator-2026";
+  const CREATOR_PASSCODE = "seiju_erosugidaro";
 
   const OPTIONS = [
     { label: "はい", value: 2 },
@@ -153,6 +153,8 @@
   const respondentBirthInput = document.getElementById("respondent-birthdate");
   const respondentGenderInput = document.getElementById("respondent-gender");
   const openAdminBtn = document.getElementById("open-admin-btn");
+  const creatorToggleBtn = document.getElementById("creator-toggle-btn");
+  const creatorPanel = document.getElementById("creator-panel");
   const creatorPasscodeInput = document.getElementById("creator-passcode");
   let currentResultSlide = 0;
 
@@ -173,6 +175,10 @@
     renderSection();
   });
   document.getElementById("reset-btn").addEventListener("click", resetAll);
+  creatorToggleBtn.addEventListener("click", () => {
+    creatorPanel.classList.toggle("hidden");
+    creatorToggleBtn.textContent = creatorPanel.classList.contains("hidden") ? "製作者パネルを表示" : "製作者パネルを隠す";
+  });
   openAdminBtn.addEventListener("click", renderCreatorData);
   resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
   resultNextBtn.addEventListener("click", () => moveResultSlide(1));
@@ -313,6 +319,8 @@
     renderTypeCatalog(type.baseCode);
     renderDeepReadings();
     renderMyHistory();
+    creatorPanel.classList.add("hidden");
+    creatorToggleBtn.textContent = "製作者パネルを表示";
 
     document.getElementById("summary-text").textContent = `あなたは「${firstCharSummary[type.first]}」。また末尾は「${type.fifth}」で、「${tailSummary[type.fifth]}」の方向性が強めです。`;
     initResultPager();

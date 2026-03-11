@@ -141,12 +141,15 @@
           <section class="result-slide" data-slide>
             <section class="result-block">
               <h3>製作者専用: 回答データ一覧</h3>
-              <p class="profile-note">※ 製作者パスコード入力後に表示されます。</p>
-              <div class="admin-gate">
-                <input id="creator-passcode" type="password" placeholder="製作者パスコード" />
-                <button id="open-admin-btn" type="button" class="btn">データを表示</button>
+              <button id="creator-toggle-btn" type="button" class="btn">製作者パネルを表示</button>
+              <div id="creator-panel" class="hidden">
+                <p class="profile-note">※ 製作者パスコード入力後に表示されます。</p>
+                <div class="admin-gate">
+                  <input id="creator-passcode" type="password" placeholder="製作者パスコード" />
+                  <button id="open-admin-btn" type="button" class="btn">データを表示</button>
+                </div>
+                <div id="creator-data-list" class="history-list"></div>
               </div>
-              <div id="creator-data-list" class="history-list"></div>
             </section>
           </section>
         </div>
