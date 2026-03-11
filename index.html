@@ -51,40 +51,60 @@
 
       <section id="result-screen" class="panel hidden">
         <h2>診断結果</h2>
-        <div class="result-card">
-          <p><strong>あなたのX-TYPEコード:</strong> <span id="full-code"></span></p>
-          <p><strong>ベースコード:</strong> <span id="base-code"></span></p>
-          <p><strong>正式名称:</strong> <span id="official-name"></span></p>
+
+        <div class="result-pager-controls">
+          <button id="result-prev-btn" type="button" class="btn">← 前の結果</button>
+          <span id="result-page-indicator">1 / 6</span>
+          <button id="result-next-btn" type="button" class="btn primary">次の結果 →</button>
         </div>
 
-        <section class="result-block">
-          <h3>性格特性スコア</h3>
-          <div id="score-meters" class="score-meters"></div>
-          <ul id="score-list" class="score-list"></ul>
-        </section>
+        <div class="result-slides-wrap">
+          <section class="result-slide active" data-slide>
+            <div class="result-card">
+              <p><strong>あなたのX-TYPEコード:</strong> <span id="full-code"></span></p>
+              <p><strong>ベースコード:</strong> <span id="base-code"></span></p>
+              <p><strong>正式名称:</strong> <span id="official-name"></span></p>
+            </div>
+            <h3>要約</h3>
+            <p id="summary-text" class="summary"></p>
+          </section>
 
-        <section class="result-block">
-          <h3>あなたのタイプの詳しい解説</h3>
-          <div id="type-detail" class="detail-card"></div>
-        </section>
+          <section class="result-slide" data-slide>
+            <section class="result-block">
+              <h3>性格特性スコア</h3>
+              <div id="score-meters" class="score-meters"></div>
+              <ul id="score-list" class="score-list"></ul>
+            </section>
+          </section>
 
-        <section class="result-block">
-          <h3>分類軸の解説</h3>
-          <div id="axis-accordion" class="accordion-list"></div>
-        </section>
+          <section class="result-slide" data-slide>
+            <section class="result-block">
+              <h3>あなたのタイプの詳しい解説</h3>
+              <div id="type-detail" class="detail-card"></div>
+            </section>
+          </section>
 
-        <section class="result-block">
-          <h3>24タイプ一覧</h3>
-          <div id="type-catalog" class="type-catalog"></div>
-        </section>
+          <section class="result-slide" data-slide>
+            <section class="result-block">
+              <h3>分類軸の解説</h3>
+              <div id="axis-accordion" class="accordion-list"></div>
+            </section>
+          </section>
 
-        <section class="result-block">
-          <h3>X-TYPEの深い読み方</h3>
-          <div id="deep-reading" class="deep-reading"></div>
-        </section>
+          <section class="result-slide" data-slide>
+            <section class="result-block">
+              <h3>24タイプ一覧</h3>
+              <div id="type-catalog" class="type-catalog"></div>
+            </section>
+          </section>
 
-        <h3>要約</h3>
-        <p id="summary-text" class="summary"></p>
+          <section class="result-slide" data-slide>
+            <section class="result-block">
+              <h3>X-TYPEの深い読み方</h3>
+              <div id="deep-reading" class="deep-reading"></div>
+            </section>
+          </section>
+        </div>
 
         <div class="result-actions">
           <button id="retry-btn" class="btn primary" type="button">もう一度やる</button>

@@ -143,6 +143,11 @@
   const quizTitle = document.getElementById("quiz-title");
   const quizDescription = document.getElementById("quiz-description");
   const form = document.getElementById("questions-form");
+  const resultSlides = [...document.querySelectorAll("[data-slide]")];
+  const resultPrevBtn = document.getElementById("result-prev-btn");
+  const resultNextBtn = document.getElementById("result-next-btn");
+  const resultPageIndicator = document.getElementById("result-page-indicator");
+  let currentResultSlide = 0;
 
   document.getElementById("start-btn").addEventListener("click", () => {
     showQuiz();
@@ -157,6 +162,8 @@
     renderSection();
   });
   document.getElementById("reset-btn").addEventListener("click", resetAll);
+  resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
+  resultNextBtn.addEventListener("click", () => moveResultSlide(1));
 
   if (state.completed) showResults();
 
@@ -290,6 +297,29 @@
     renderDeepReadings();
 
     document.getElementById("summary-text").textContent = `あなたは「${firstCharSummary[type.first]}」。また末尾は「${type.fifth}」で、「${tailSummary[type.fifth]}」の方向性が強めです。`;
+    initResultPager();
+  }
+
+  function initResultPager() {
+    currentResultSlide = 0;
+    updateResultSlide();
+  }
+
+  function moveResultSlide(step) {
+    const nextIndex = currentResultSlide + step;
+    if (nextIndex < 0 || nextIndex >= resultSlides.length) return;
+    currentResultSlide = nextIndex;
+    updateResultSlide();
+    resultScreen.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function updateResultSlide() {
+    resultSlides.forEach((slide, index) => {
+      slide.classList.toggle("active", index === currentResultSlide);
+    });
+    resultPageIndicator.textContent = `${currentResultSlide + 1} / ${resultSlides.length}`;
+    resultPrevBtn.disabled = currentResultSlide === 0;
+    resultNextBtn.disabled = currentResultSlide === resultSlides.length - 1;
   }
 
   function renderScoreMeters(scores, type) {

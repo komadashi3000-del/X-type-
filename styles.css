@@ -326,3 +326,52 @@ summary {
     width: 100%;
   }
 }
+
+.result-pager-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+#result-page-indicator {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.result-slides-wrap {
+  position: relative;
+  min-height: 360px;
+}
+
+.result-slide {
+  display: none;
+  animation: flipIn 0.35s ease;
+}
+
+.result-slide.active {
+  display: block;
+}
+
+@keyframes flipIn {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateY(12deg) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(900px) rotateY(0deg) translateY(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .result-pager-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #result-page-indicator {
+    text-align: center;
+  }
+}
