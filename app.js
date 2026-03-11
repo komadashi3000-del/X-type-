@@ -154,7 +154,8 @@
   const respondentGenderInput = document.getElementById("respondent-gender");
   const openAdminBtn = document.getElementById("open-admin-btn");
   const creatorToggleBtn = document.getElementById("creator-toggle-btn");
-  const creatorPanel = document.getElementById("creator-panel");
+  const creatorModal = document.getElementById("creator-modal");
+  const closeAdminBtn = document.getElementById("close-admin-btn");
   const creatorPasscodeInput = document.getElementById("creator-passcode");
   let currentResultSlide = 0;
 
@@ -176,9 +177,11 @@
   });
   document.getElementById("reset-btn").addEventListener("click", resetAll);
   creatorToggleBtn.addEventListener("click", () => {
-    creatorPanel.classList.toggle("hidden");
-    creatorToggleBtn.textContent = creatorPanel.classList.contains("hidden") ? "製作者パネルを表示" : "製作者パネルを隠す";
+    creatorModal.classList.remove("hidden");
+    creatorModal.setAttribute("aria-hidden", "false");
+    creatorPasscodeInput.focus();
   });
+  closeAdminBtn.addEventListener("click", closeCreatorModal);
   openAdminBtn.addEventListener("click", renderCreatorData);
   resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
   resultNextBtn.addEventListener("click", () => moveResultSlide(1));
@@ -319,8 +322,7 @@
     renderTypeCatalog(type.baseCode);
     renderDeepReadings();
     renderMyHistory();
-    creatorPanel.classList.add("hidden");
-    creatorToggleBtn.textContent = "製作者パネルを表示";
+    closeCreatorModal();
 
     document.getElementById("summary-text").textContent = `あなたは「${firstCharSummary[type.first]}」。また末尾は「${type.fifth}」で、「${tailSummary[type.fifth]}」の方向性が強めです。`;
     initResultPager();
@@ -605,6 +607,12 @@
         <p>AFN: A=${entry.scores.AFN.A.toFixed(1)} / F=${entry.scores.AFN.F.toFixed(1)} / N=${entry.scores.AFN.N.toFixed(1)}</p>`;
       container.appendChild(el);
     });
+  }
+
+  function closeCreatorModal() {
+    creatorModal.classList.add("hidden");
+    creatorModal.setAttribute("aria-hidden", "true");
+    creatorPasscodeInput.value = "";
   }
 
   function renderCreatorData() {

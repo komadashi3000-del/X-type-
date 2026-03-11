@@ -79,7 +79,7 @@
 
         <div class="result-pager-controls">
           <button id="result-prev-btn" type="button" class="btn">← 前の結果</button>
-          <span id="result-page-indicator">1 / 8</span>
+          <span id="result-page-indicator">1 / 7</span>
           <button id="result-next-btn" type="button" class="btn primary">次の結果 →</button>
         </div>
 
@@ -135,23 +135,25 @@
             <section class="result-block">
               <h3>あなたの回答・結果履歴</h3>
               <div id="my-history-list" class="history-list"></div>
-            </section>
-          </section>
-
-          <section class="result-slide" data-slide>
-            <section class="result-block">
-              <h3>製作者専用: 回答データ一覧</h3>
-              <button id="creator-toggle-btn" type="button" class="btn">製作者パネルを表示</button>
-              <div id="creator-panel" class="hidden">
-                <p class="profile-note">※ 製作者パスコード入力後に表示されます。</p>
-                <div class="admin-gate">
-                  <input id="creator-passcode" type="password" placeholder="製作者パスコード" />
-                  <button id="open-admin-btn" type="button" class="btn">データを表示</button>
-                </div>
-                <div id="creator-data-list" class="history-list"></div>
+              <div class="developer-entry-wrap">
+                <button id="creator-toggle-btn" type="button" class="btn">開発者画面</button>
               </div>
             </section>
           </section>
+        </div>
+
+
+        <div id="creator-modal" class="creator-modal hidden" aria-hidden="true">
+          <div class="creator-modal-card">
+            <h3>開発者画面（パスワード認証）</h3>
+            <p class="profile-note">パスワード入力後、全回答データを表示します。</p>
+            <div class="admin-gate">
+              <input id="creator-passcode" type="password" placeholder="開発者パスワード" />
+              <button id="open-admin-btn" type="button" class="btn">表示</button>
+              <button id="close-admin-btn" type="button" class="btn">閉じる</button>
+            </div>
+            <div id="creator-data-list" class="history-list"></div>
+          </div>
         </div>
 
         <div class="result-actions">

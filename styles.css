@@ -484,3 +484,35 @@ body::after {
     flex-direction: column;
   }
 }
+
+.developer-entry-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.creator-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 20, 30, 0.45);
+  backdrop-filter: blur(3px);
+  display: grid;
+  place-items: center;
+  z-index: 50;
+}
+
+.creator-modal-card {
+  width: min(860px, 92vw);
+  max-height: 82vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.64));
+  box-shadow: var(--glass-shadow);
+}
+
+
+.creator-modal.hidden {
+  display: none !important;
+}
