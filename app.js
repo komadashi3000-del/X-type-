@@ -1607,6 +1607,7 @@ function renderTypeDetailsMenu() {
 
   keys.forEach((code) => {
     const detail = groupData[code];
+    if (!detail) return;
 
     const card = document.createElement("button");
     card.type = "button";
