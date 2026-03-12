@@ -176,9 +176,9 @@
     renderSection();
   });
   document.getElementById("reset-btn").addEventListener("click", resetAll);
-  creatorToggleBtn.addEventListener("click", openCreatorModal);
-  closeAdminBtn.addEventListener("click", closeCreatorModal);
-  openAdminBtn.addEventListener("click", renderCreatorData);
+  if (creatorToggleBtn) creatorToggleBtn.addEventListener("click", openCreatorModal);
+  if (closeAdminBtn) closeAdminBtn.addEventListener("click", closeCreatorModal);
+  if (openAdminBtn) openAdminBtn.addEventListener("click", renderCreatorData);
   resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
   resultNextBtn.addEventListener("click", () => moveResultSlide(1));
 
@@ -606,29 +606,36 @@
   }
 
   function openCreatorModal() {
+    if (!creatorModal) {
+      window.alert("開発者画面を開けませんでした。ページを再読み込みしてください。");
+      return;
+    }
     creatorModal.hidden = false;
     creatorModal.classList.remove("hidden");
     creatorModal.style.display = "grid";
     creatorModal.setAttribute("aria-hidden", "false");
-    creatorPasscodeInput.focus();
+    if (creatorPasscodeInput) creatorPasscodeInput.focus();
   }
 
   function closeCreatorModal() {
+    if (!creatorModal) return;
     creatorModal.classList.add("hidden");
     creatorModal.hidden = true;
     creatorModal.style.display = "none";
     creatorModal.setAttribute("aria-hidden", "true");
-    creatorPasscodeInput.value = "";
+    if (creatorPasscodeInput) creatorPasscodeInput.value = "";
   }
 
-  creatorModal.addEventListener("click", (event) => {
-    if (event.target === creatorModal) closeCreatorModal();
-  });
+  if (creatorModal) {
+    creatorModal.addEventListener("click", (event) => {
+      if (event.target === creatorModal) closeCreatorModal();
+    });
+  }
 
   function renderCreatorData() {
     const container = document.getElementById("creator-data-list");
     container.innerHTML = "";
-    if (creatorPasscodeInput.value !== CREATOR_PASSCODE) {
+    if (!creatorPasscodeInput || creatorPasscodeInput.value !== CREATOR_PASSCODE) {
       window.alert("製作者パスコードが違います。");
       return;
     }
