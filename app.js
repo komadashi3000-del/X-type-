@@ -2,7 +2,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 const STORAGE_KEY = "xtype-test-state-v1";
 const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
-const supabase = window.supabase;
+const supabase = window.supabaseClient;
+
+if (!supabase) {
+  console.error("Supabase client is not initialized.");
+  return;
+}
   const OPTIONS = [
     { label: "はい", value: 2 },
     { label: "ややはい", value: 1 },
@@ -1072,8 +1077,12 @@ resultNextBtn?.addEventListener("click", () => moveResultSlide(1));
 
   initMenuNavigation();
   syncProfileInputs();
- initAccountMenu();
+   initAccountMenu();
 if (state.completed) showResults();
+supabase.auth.onAuthStateChange(() => {
+  renderCurrentAccount();
+  renderHistoryMenu();
+});
 
   function renderSection() {
     const section = sectionConfigs[state.currentSection];
@@ -1281,6 +1290,46 @@ async function handleNext() {
   return { title, left, right, dominant, percent, rightPercent, color };
 }
 
+async function renderMyHistory() {
+  const container = document.getElementById("my-history-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const user = userData?.user;
+
+  if (userError || !user) {
+    container.innerHTML = "<p>ログインすると履歴を表示できます。</p>";
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("test_results")
+    .select("created_at, full_code, official_name")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.innerHTML = `<p>${error.message}</p>`;
+    return;
+  }
+
+  if (!data?.length) {
+    container.innerHTML = "<p>履歴はまだありません。</p>";
+    return;
+  }
+
+  data.forEach((entry) => {
+    const el = document.createElement("article");
+    el.className = "history-item";
+    el.innerHTML = `
+      <p><strong>${new Date(entry.created_at).toLocaleString("ja-JP")}</strong></p>
+      <p>${entry.full_code}（${entry.official_name}）</p>
+    `;
+    container.appendChild(el);
+  });
+}
+  
   function renderScoreList(scores, type) {
     const scoreList = document.getElementById("score-list");
     scoreList.innerHTML = "";
@@ -1690,36 +1739,6 @@ function resetAll() {
     }
   }
   
-async function persistHistory(scores, type) {
-  if (!state.profile) {
-    throw new Error("回答者情報がありません。");
-  }
-
-  const { data: userData, error: userError } = await supabase.auth.getUser();
-  const user = userData?.user;
-
-  if (userError || !user) {
-    throw new Error("診断結果の保存にはログインが必要です。");
-  }
-
-  const { error } = await supabase
-    .from("test_results")
-    .insert({
-      user_id: user.id,
-      respondent_name: state.profile.name,
-      respondent_birthdate: state.profile.birthDate,
-      respondent_gender: state.profile.gender,
-      full_code: type.fullCode,
-      base_code: type.baseCode,
-      official_name: type.officialName,
-      scores,
-      answers: state.answers
-    });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-}
 
 async function persistHistory(scores, type) {
   if (!state.profile) {
@@ -1932,6 +1951,11 @@ async function handleLogin() {
   accountCurrent.textContent =
     `現在ログイン中: ${user.user_metadata?.username ?? user.email}（${user.email}）`;
 }
+
+  function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+  
 });
 
 
