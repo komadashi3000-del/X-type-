@@ -1263,14 +1263,17 @@ resultNextBtn?.addEventListener("click", () => moveResultSlide(1));
   }
 
   function scoreMeterData(title, left, right, leftScore, rightScore, count, color, average = false) {
-    const max = average ? 2 : 2 * count;
-    const leftNorm = (leftScore + max) / (2 * max);
-    const rightNorm = (rightScore + max) / (2 * max);
-    const rightPercent = Math.round((rightNorm / (leftNorm + rightNorm || 1)) * 100);
-    const dominant = rightPercent >= 50 ? right : left;
-    const percent = rightPercent >= 50 ? rightPercent : 100 - rightPercent;
-    return { title, left, right, dominant, percent, rightPercent, color };
-  }
+  const max = average ? 2 : 2 * count;
+  const leftNorm = (leftScore + max) / (2 * max);
+  const rightNorm = (rightScore + max) / (2 * max);
+  const total = leftNorm + rightNorm;
+
+  const rightPercent = total === 0 ? 50 : Math.round((rightNorm / total) * 100);
+  const dominant = rightPercent === 50 ? "同率" : (rightPercent > 50 ? right : left);
+  const percent = rightPercent === 50 ? 50 : Math.max(rightPercent, 100 - rightPercent);
+
+  return { title, left, right, dominant, percent, rightPercent, color };
+}
 
   function renderScoreList(scores, type) {
     const scoreList = document.getElementById("score-list");
@@ -1572,15 +1575,22 @@ function renderTypeDetailsMenu() {
     quizScreen.classList.remove("hidden");
   }
 
-  function resetAll() {
-    localStorage.removeItem(STORAGE_KEY);
-    state.answers = {};
-    state.currentSection = 0;
-    state.completed = false;
-    state.profile = null;
-    showQuiz();
-    renderSection();
-  }
+function resetAll() {
+  localStorage.removeItem(STORAGE_KEY);
+
+  state.answers = {};
+  state.currentSection = 0;
+  state.completed = false;
+  state.profile = null;
+
+  respondentNameInput.value = "";
+  respondentBirthInput.value = "";
+  respondentGenderInput.value = "";
+
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  startScreen.classList.remove("hidden");
+}
 
   function updateProgress() {
     const answeredCount = Object.keys(state.answers).filter((key) => typeof state.answers[key] === "number").length;
