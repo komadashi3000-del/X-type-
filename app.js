@@ -1,9 +1,8 @@
-// X-TYPE 診断テスト: 質問・採点・結果解説の一元管理
+  // X-TYPE 診断テスト: 質問・採点・結果解説の一元管理
 document.addEventListener("DOMContentLoaded", () => {
-  const STORAGE_KEY = "xtype-test-state-v1";
-  const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
-  const ACCOUNT_STORAGE_KEY = "xtype-account-store-v1";
-  const CREATOR_PASSCODE = "seiju_erosugidaro";
+const STORAGE_KEY = "xtype-test-state-v1";
+const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
+const supabase = window.supabase;
   const OPTIONS = [
     { label: "はい", value: 2 },
     { label: "ややはい", value: 1 },
@@ -1073,9 +1072,8 @@ resultNextBtn?.addEventListener("click", () => moveResultSlide(1));
 
   initMenuNavigation();
   syncProfileInputs();
-  initAccountMenu();
-  handleAccountVerificationFromHash();
-  if (state.completed) showResults();
+ initAccountMenu();
+if (state.completed) showResults();
 
   function renderSection() {
     const section = sectionConfigs[state.currentSection];
@@ -1118,28 +1116,36 @@ resultNextBtn?.addEventListener("click", () => moveResultSlide(1));
     document.getElementById("next-btn").textContent = state.currentSection === sectionConfigs.length - 1 ? "結果を見る" : "次へ";
   }
 
-  function handleNext() {
-    const section = sectionConfigs[state.currentSection];
-    const sectionQuestions = questions.filter((q) => q.id >= section.start && q.id <= section.end);
-    if (!sectionQuestions.every((q) => typeof state.answers[q.id] === "number")) {
-      window.alert("このセクションの全設問に回答してください。");
-      return;
-    }
-    if (state.currentSection < sectionConfigs.length - 1) {
-      state.currentSection += 1;
-      saveState();
-      renderSection();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    const scores = computeScores(state.answers);
-    const type = determineType(scores);
-    persistHistory(scores, type);
+async function handleNext() {
+  const section = sectionConfigs[state.currentSection];
+  const sectionQuestions = questions.filter((q) => q.id >= section.start && q.id <= section.end);
+
+  if (!sectionQuestions.every((q) => typeof state.answers[q.id] === "number")) {
+    window.alert("このセクションの全設問に回答してください。");
+    return;
+  }
+
+  if (state.currentSection < sectionConfigs.length - 1) {
+    state.currentSection += 1;
+    saveState();
+    renderSection();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+
+  const scores = computeScores(state.answers);
+  const type = determineType(scores);
+
+  try {
+    await persistHistory(scores, type);
     state.completed = true;
     saveState();
     showResults();
+  } catch (error) {
+    window.alert(error.message || "診断結果の保存に失敗しました。");
   }
-
+}
+  
   function handlePrev() {
     if (state.currentSection === 0) return;
     state.currentSection -= 1;
@@ -1470,27 +1476,42 @@ resultNextBtn?.addEventListener("click", () => moveResultSlide(1));
     compatDetailPage?.classList.remove("hidden");
   }
 
-  function renderHistoryMenu() {
-    const container = document.getElementById("menu-history-list");
-    if (!container) return;
-    container.innerHTML = "";
-    if (!state.profile) {
-      container.innerHTML = "<p>診断本編で回答者情報を入力すると履歴を表示できます。</p>";
-      return;
-    }
-    const store = loadHistoryStore();
-    const entries = (store.respondents[profileKey(state.profile)]?.entries ?? []).slice().reverse();
-    if (!entries.length) {
-      container.innerHTML = "<p>履歴はまだありません。</p>";
-      return;
-    }
-    entries.forEach((entry) => {
-      const el = document.createElement("article");
-      el.className = "history-item";
-      el.innerHTML = `<p><strong>${new Date(entry.createdAt).toLocaleString("ja-JP")}</strong></p><p>${entry.fullCode}（${entry.officialName}）</p>`;
-      container.appendChild(el);
-    });
+ async function renderHistoryMenu() {
+  const container = document.getElementById("menu-history-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const user = userData?.user;
+
+  if (userError || !user) {
+    container.innerHTML = "<p>ログインすると履歴を表示できます。</p>";
+    return;
   }
+
+  const { data, error } = await supabase
+    .from("test_results")
+    .select("created_at, full_code, official_name")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.innerHTML = `<p>${error.message}</p>`;
+    return;
+  }
+
+  if (!data?.length) {
+    container.innerHTML = "<p>履歴はまだありません。</p>";
+    return;
+  }
+
+  data.forEach((entry) => {
+    const el = document.createElement("article");
+    el.className = "history-item";
+    el.innerHTML = `<p><strong>${new Date(entry.created_at).toLocaleString("ja-JP")}</strong></p><p>${entry.full_code}（${entry.official_name}）</p>`;
+    container.appendChild(el);
+  });
+}
 
 function renderTypeDetailsMenu() {
   const catalog = document.getElementById("menu-type-catalog");
@@ -1668,121 +1689,158 @@ function resetAll() {
       return { respondents: {} };
     }
   }
+  
+async function persistHistory(scores, type) {
+  if (!state.profile) {
+    throw new Error("回答者情報がありません。");
+  }
 
-  function persistHistory(scores, type) {
-    if (!state.profile) return;
-    const store = loadHistoryStore();
-    const key = profileKey(state.profile);
-    if (!store.respondents[key]) {
-      store.respondents[key] = { profile: state.profile, entries: [] };
-    }
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const user = userData?.user;
 
-    const entry = {
-      id: `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
-      createdAt: new Date().toISOString(),
-      fullCode: type.fullCode,
-      baseCode: type.baseCode,
-      officialName: type.officialName,
+  if (userError || !user) {
+    throw new Error("診断結果の保存にはログインが必要です。");
+  }
+
+  const { error } = await supabase
+    .from("test_results")
+    .insert({
+      user_id: user.id,
+      respondent_name: state.profile.name,
+      respondent_birthdate: state.profile.birthDate,
+      respondent_gender: state.profile.gender,
+      full_code: type.fullCode,
+      base_code: type.baseCode,
+      official_name: type.officialName,
       scores,
       answers: state.answers
-    };
-    store.respondents[key].entries.push(entry);
-    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(store));
-  }
-
-  function renderMyHistory() {
-    const container = document.getElementById("my-history-list");
-    container.innerHTML = "";
-    if (!state.profile) {
-      container.innerHTML = '<p>回答者情報が見つかりません。</p>';
-      return;
-    }
-    const store = loadHistoryStore();
-    const key = profileKey(state.profile);
-    const entries = (store.respondents[key]?.entries ?? []).slice().reverse();
-    if (!entries.length) {
-      container.innerHTML = '<p>履歴はまだありません。</p>';
-      return;
-    }
-    entries.forEach((entry) => {
-      const el = document.createElement("article");
-      el.className = "history-item";
-      el.innerHTML = `<p><strong>${new Date(entry.createdAt).toLocaleString("ja-JP")}</strong></p>
-        <p>コード: ${entry.fullCode}（${entry.officialName}）</p>
-        <p>AFN: A=${entry.scores.AFN.A.toFixed(1)} / F=${entry.scores.AFN.F.toFixed(1)} / N=${entry.scores.AFN.N.toFixed(1)}</p>`;
-      container.appendChild(el);
     });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function persistHistory(scores, type) {
+  if (!state.profile) {
+    throw new Error("回答者情報がありません。");
   }
 
-  function openCreatorModal() {
-    if (!creatorModal) {
-      window.alert("開発者画面を開けませんでした。ページを再読み込みしてください。");
-      return;
-    }
-    creatorModal.hidden = false;
-    creatorModal.classList.remove("hidden");
-    creatorModal.style.display = "grid";
-    creatorModal.setAttribute("aria-hidden", "false");
-    if (creatorPasscodeInput) creatorPasscodeInput.focus();
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const user = userData?.user;
+
+  if (userError || !user) {
+    throw new Error("診断結果の保存にはログインが必要です。");
   }
 
-  function closeCreatorModal() {
-    if (!creatorModal) return;
-    creatorModal.classList.add("hidden");
-    creatorModal.hidden = true;
-    creatorModal.style.display = "none";
-    creatorModal.setAttribute("aria-hidden", "true");
-    if (creatorPasscodeInput) creatorPasscodeInput.value = "";
-  }
-
-  if (creatorModal) {
-    creatorModal.addEventListener("click", (event) => {
-      if (event.target === creatorModal) closeCreatorModal();
+  const { error } = await supabase
+    .from("test_results")
+    .insert({
+      user_id: user.id,
+      respondent_name: state.profile.name,
+      respondent_birthdate: state.profile.birthDate,
+      respondent_gender: state.profile.gender,
+      full_code: type.fullCode,
+      base_code: type.baseCode,
+      official_name: type.officialName,
+      scores,
+      answers: state.answers
     });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+ 
+ function openCreatorModal() {
+  if (!creatorModal) {
+    window.alert("開発者画面を開けませんでした。");
+    return;
+  }
+  creatorModal.hidden = false;
+  creatorModal.classList.remove("hidden");
+  creatorModal.style.display = "grid";
+  creatorModal.setAttribute("aria-hidden", "false");
+}
+
+function closeCreatorModal() {
+  if (!creatorModal) return;
+  creatorModal.classList.add("hidden");
+  creatorModal.hidden = true;
+  creatorModal.style.display = "none";
+  creatorModal.setAttribute("aria-hidden", "true");
+}
+
+if (creatorModal) {
+  creatorModal.addEventListener("click", (event) => {
+    if (event.target === creatorModal) closeCreatorModal();
+  });
+}
+
+async function renderCreatorData() {
+  const container = document.getElementById("creator-data-list");
+  container.innerHTML = "";
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const user = userData?.user;
+
+  if (userError || !user) {
+    window.alert("ログインしてください。");
+    return;
   }
 
-  function renderCreatorData() {
-    const container = document.getElementById("creator-data-list");
-    container.innerHTML = "";
-    if (!creatorPasscodeInput || creatorPasscodeInput.value !== CREATOR_PASSCODE) {
-      window.alert("製作者パスコードが違います。");
-      return;
-    }
-    const store = loadHistoryStore();
-    const respondents = Object.values(store.respondents);
-    if (!respondents.length) {
-      container.innerHTML = '<p>保存データはありません。</p>';
-      return;
-    }
+  const { data: adminRow, error: adminError } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
 
-    respondents.forEach((row) => {
-      row.entries.forEach((entry) => {
-        const item = document.createElement("article");
-        item.className = "history-item";
-        item.innerHTML = `<p><strong>${new Date(entry.createdAt).toLocaleString("ja-JP")}</strong></p>
-          <p>回答者: ${row.profile.name} / ${row.profile.birthDate} / ${row.profile.gender}</p>
-          <p>結果: ${entry.fullCode}（${entry.officialName}）</p>
-          <details><summary>回答データ（100問）</summary><pre>${JSON.stringify(entry.answers, null, 2)}</pre></details>`;
-        container.appendChild(item);
-      });
-    });
+  if (adminError || !adminRow) {
+    window.alert("管理者権限がありません。");
+    return;
   }
 
-  function loadAccountStore() {
-    try {
-      const raw = localStorage.getItem(ACCOUNT_STORAGE_KEY);
-      if (!raw) return { accounts: [], activeUserId: null };
-      const parsed = JSON.parse(raw);
-      return { accounts: parsed.accounts ?? [], activeUserId: parsed.activeUserId ?? null };
-    } catch {
-      return { accounts: [], activeUserId: null };
-    }
+  const { data, error } = await supabase
+    .from("test_results")
+    .select(`
+      created_at,
+      respondent_name,
+      respondent_birthdate,
+      respondent_gender,
+      full_code,
+      official_name,
+      answers
+    `)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.innerHTML = `<p>${error.message}</p>`;
+    return;
   }
 
-  function saveAccountStore(store) {
-    localStorage.setItem(ACCOUNT_STORAGE_KEY, JSON.stringify(store));
+  if (!data?.length) {
+    container.innerHTML = '<p>保存データはありません。</p>';
+    return;
   }
 
+  data.forEach((entry) => {
+    const item = document.createElement("article");
+    item.className = "history-item";
+    item.innerHTML = `
+      <p><strong>${new Date(entry.created_at).toLocaleString("ja-JP")}</strong></p>
+      <p>回答者: ${entry.respondent_name} / ${entry.respondent_birthdate} / ${entry.respondent_gender}</p>
+      <p>結果: ${entry.full_code}（${entry.official_name}）</p>
+      <details>
+        <summary>回答データ（100問）</summary>
+        <pre>${JSON.stringify(entry.answers, null, 2)}</pre>
+      </details>
+    `;
+    container.appendChild(item);
+  });
+}
+
+ 
   function passwordValid(password) {
     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{5,}$/.test(password);
   }
@@ -1802,103 +1860,78 @@ function resetAll() {
     }
     renderCurrentAccount();
   }
+  
+async function handleSignup() {
+  const username = signupUsernameInput?.value.trim() ?? "";
+  const email = (signupEmailInput?.value.trim() ?? "").toLowerCase();
+  const password = signupPasswordInput?.value ?? "";
 
-  function handleSignup() {
-    const username = signupUsernameInput?.value.trim() ?? "";
-    const email = (signupEmailInput?.value.trim() ?? "").toLowerCase();
-    const password = signupPasswordInput?.value ?? "";
-
-    if (!username || !email || !password) {
-      if (signupMessage) signupMessage.innerHTML = "<p>全項目を入力してください。</p>";
-      return;
-    }
-    if (!passwordValid(password)) {
-      if (signupMessage) signupMessage.innerHTML = "<p>パスワード条件を満たしていません（英大/英小/数字を含む5文字以上、記号なし）。</p>";
-      return;
-    }
-
-    const store = loadAccountStore();
-    const duplicate = store.accounts.some((acc) => acc.email === email || acc.username.toLowerCase() === username.toLowerCase());
-    if (duplicate) {
-      if (signupMessage) signupMessage.innerHTML = "<p>同じメールアドレスまたはアカウント名が既に使われています。</p>";
-      return;
-    }
-
-    const id = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
-    const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
-    const account = { id, username, email, password, verified: false, verifyToken: token, createdAt: new Date().toISOString() };
-    store.accounts.push(account);
-    saveAccountStore(store);
-
-    const returnUrl = `${location.origin}${location.pathname}#verify=${token}`;
-    const subject = encodeURIComponent("【X-TYPE】アカウント登録のお知らせ");
-    const body = encodeURIComponent(`X-TYPEへのアカウント登録ありがとうございます。
-
-アカウント名: ${username}
-
-下記リンクからサイトへ戻って確認を完了してください。
-${returnUrl}`);
-    const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
-
-    if (signupMessage) {
-      signupMessage.innerHTML = `<p>確認メールを作成しました。下のリンクから送信して、受信したメール内リンクで確認を完了してください（全メールアドレス形式に対応）。</p>
-        <a class="mail-link" href="${mailto}">確認メールを送る（メールアプリを開く）</a>
-        <p><a class="mail-link" href="${returnUrl}">確認リンクを開く（デモ用）</a></p>`;
-    }
-    signupForm?.reset();
+  if (!username || !email || !password) {
+    if (signupMessage) signupMessage.innerHTML = "<p>全項目を入力してください。</p>";
+    return;
   }
 
-  function handleAccountVerificationFromHash() {
-    const hash = window.location.hash || "";
-    if (!hash.startsWith("#verify=")) return;
-    const token = hash.replace("#verify=", "").trim();
-    if (!token) return;
+  if (!passwordValid(password)) {
+    if (signupMessage) signupMessage.innerHTML = "<p>パスワード条件を満たしていません（英大/英小/数字を含む5文字以上、記号なし）。</p>";
+    return;
+  }
 
-    const store = loadAccountStore();
-    const account = store.accounts.find((acc) => acc.verifyToken === token);
-    if (!account) {
-      if (loginMessage) loginMessage.innerHTML = "<p>確認トークンが無効です。</p>";
-      return;
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username }
     }
-    account.verified = true;
-    account.verifyToken = null;
-    saveAccountStore(store);
-    window.history.replaceState(null, "", location.pathname);
-    if (loginMessage) loginMessage.innerHTML = `<p>${account.username} のメール確認が完了しました。ログインできます。</p>`;
+  });
+
+  if (error) {
+    if (signupMessage) signupMessage.innerHTML = `<p>${error.message}</p>`;
+    return;
   }
 
-  function handleLogin() {
-    const identifier = loginIdentifierInput?.value.trim() ?? "";
-    const password = loginPasswordInput?.value ?? "";
-    const store = loadAccountStore();
-    const account = store.accounts.find((acc) => acc.email === identifier.toLowerCase() || acc.username === identifier);
-
-    if (!account || account.password !== password) {
-      if (loginMessage) loginMessage.innerHTML = "<p>ログイン情報が正しくありません。</p>";
-      return;
-    }
-    if (!account.verified) {
-      if (loginMessage) loginMessage.innerHTML = "<p>メール確認が完了していません。サインアップ欄の確認リンクで完了してください。</p>";
-      return;
-    }
-
-    store.activeUserId = account.id;
-    saveAccountStore(store);
-    if (loginMessage) loginMessage.innerHTML = `<p>ログイン成功: ${account.username}</p>`;
-    renderCurrentAccount();
-    loginForm?.reset();
+  if (signupMessage) {
+    signupMessage.innerHTML = "<p>登録しました。確認メールを開いて認証してください。</p>";
   }
 
-  function renderCurrentAccount() {
-    const store = loadAccountStore();
-    const active = store.accounts.find((acc) => acc.id === store.activeUserId);
-    if (!accountCurrent) return;
-    accountCurrent.textContent = active ? `現在ログイン中: ${active.username}（${active.email}）` : "現在ログインしていません。";
+  signupForm?.reset();
+}
+  
+async function handleLogin() {
+  const email = loginIdentifierInput?.value.trim().toLowerCase() ?? "";
+  const password = loginPasswordInput?.value ?? "";
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    if (loginMessage) loginMessage.innerHTML = `<p>${error.message}</p>`;
+    return;
   }
 
-  function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  if (loginMessage) {
+    loginMessage.innerHTML = `<p>ログイン成功: ${data.user?.user_metadata?.username ?? data.user?.email}</p>`;
   }
+
+  renderCurrentAccount();
+  loginForm?.reset();
+}
+
+  async function renderCurrentAccount() {
+  if (!accountCurrent) return;
+
+  const { data, error } = await supabase.auth.getUser();
+  const user = data?.user;
+
+  if (error || !user) {
+    accountCurrent.textContent = "現在ログインしていません。";
+    return;
+  }
+
+  accountCurrent.textContent =
+    `現在ログイン中: ${user.user_metadata?.username ?? user.email}（${user.email}）`;
+}
 });
 
 
