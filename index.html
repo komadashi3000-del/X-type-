@@ -162,11 +162,11 @@
           <div class="creator-modal-card">
             <h3>開発者画面（パスワード認証）</h3>
             <p class="profile-note">パスワード入力後、全回答データを表示します。</p>
-            <div class="admin-gate">
-              <input id="creator-passcode" type="password" placeholder="開発者パスワード" />
-              <button id="open-admin-btn" type="button" class="btn">表示</button>
-              <button id="close-admin-btn" type="button" class="btn">閉じる</button>
-            </div>
+         <div class="admin-gate">
+  <button id="open-admin-btn" type="button" class="btn">表示</button>
+  <button id="close-admin-btn" type="button" class="btn">閉じる</button>
+</div>
+<p class="profile-note">※ 管理者アカウントのみ表示できます。</p>
             <div id="creator-data-list" class="history-list"></div>
           </div>
         </div>
@@ -181,7 +181,7 @@
       <section id="menu-history" class="menu-screen hidden" aria-label="履歴画面">
         <section class="panel">
           <h2>履歴</h2>
-          <p class="profile-note">入力済みの回答者情報に紐づく履歴のみを表示します。</p>
+          <p class="profile-note">ログイン中ユーザーの診断履歴を表示します。</p>
           <div id="menu-history-list" class="history-list"></div>
         </section>
       </section>
@@ -283,7 +283,9 @@
             <section class="result-block">
               <h3>ログイン</h3>
               <form id="login-form" class="account-form">
-                <label>メールアドレス または アカウント名<input id="login-identifier" type="text" required placeholder="mail または username" /></label>
+               <label>メールアドレス
+  <input id="login-email" type="email" required placeholder="example@mail.com" />
+</label>
                 <label>パスワード<input id="login-password" type="password" required /></label>
                 <button type="submit" class="btn">ログイン</button>
               </form>
@@ -295,6 +297,8 @@
       </section>
     </main>
 
-    <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
   </body>
 </html>
+
