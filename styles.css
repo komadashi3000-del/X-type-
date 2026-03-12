@@ -172,6 +172,11 @@ h4 {
   padding: 8px 10px;
 }
 
+#back-to-menu-btn {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
 
 .menu-btn.active {
   border-color: #7ad6ff;
