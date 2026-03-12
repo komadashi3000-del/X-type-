@@ -209,6 +209,7 @@ h4 {
 }
 
 .type-group-btn.active {
+.comp-group-btn.active {
   background: linear-gradient(180deg, #b9f0ff, #89dcff);
   border-color: #7ad6ff;
   box-shadow: 0 0 0 1px #7ad6ff inset;

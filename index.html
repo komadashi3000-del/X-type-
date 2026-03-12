@@ -205,7 +205,16 @@
       <section id="menu-compatibility" class="menu-screen hidden" aria-label="各タイプ相性">
         <section class="panel">
           <h2>各タイプ相性</h2>
-          <p>このメニューは次の段階で実装します。まずは「各タイプの詳細説明」から拡張していきます。</p>
+          <p class="profile-note">詳細解説と同じく、まず A群 / F群 / N群 を選んでからタイプ別相性を表示します。</p>
+          <div class="type-group-tabs" role="tablist" aria-label="相性タイプ群タブ">
+            <button type="button" class="btn comp-group-btn active" data-comp-group="A">A群</button>
+            <button type="button" class="btn comp-group-btn" data-comp-group="F">F群</button>
+            <button type="button" class="btn comp-group-btn" data-comp-group="N">N群</button>
+          </div>
+          <div class="type-details-layout">
+            <div id="compat-catalog" class="type-catalog grouped-catalog"></div>
+            <article id="compat-detail-view" class="result-block long-detail-view"></article>
+          </div>
         </section>
       </section>
 
