@@ -586,8 +586,6 @@
   const creatorPasscodeInput = document.getElementById("creator-passcode");
   const menuButtons = [...document.querySelectorAll(".menu-btn")];
   const menuScreens = [...document.querySelectorAll(".menu-screen")];
-  const mainMenu = document.querySelector(".main-menu");
-  const backToMenuBtn = document.getElementById("back-to-menu-btn");
   const typeGroupButtons = [...document.querySelectorAll(".type-group-btn")];
   const compGroupButtons = [...document.querySelectorAll(".comp-group-btn")];
   const typeCatalogPage = document.getElementById("type-catalog-page");
@@ -638,13 +636,6 @@
   initMenuNavigation();
   syncProfileInputs();
   initAccountMenu();
-  if (backToMenuBtn) {
-    backToMenuBtn.addEventListener("click", () => {
-      mainMenu?.classList.remove("hidden");
-      backToMenuBtn.classList.add("hidden");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
   handleAccountVerificationFromHash();
   if (state.completed) showResults();
 
@@ -1005,10 +996,6 @@
       screen.classList.toggle("hidden", !active);
       screen.classList.toggle("active", active);
     });
-
-    mainMenu?.classList.add("hidden");
-    backToMenuBtn?.classList.remove("hidden");
-    window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (menuKey === "history") renderHistoryMenu();
     if (menuKey === "type-details") {
