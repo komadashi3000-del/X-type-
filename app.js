@@ -2,6 +2,7 @@
 (() => {
   const STORAGE_KEY = "xtype-test-state-v1";
   const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
+  const ACCOUNT_STORAGE_KEY = "xtype-account-store-v1";
   const CREATOR_PASSCODE = "seiju_erosugidaro";
 
   const OPTIONS = [
@@ -486,6 +487,16 @@
   const compatDetailPage = document.getElementById("compat-detail-page");
   const compatDetailView = document.getElementById("compat-detail-view");
   const compatDetailBackBtn = document.getElementById("compat-detail-back");
+  const signupForm = document.getElementById("signup-form");
+  const signupUsernameInput = document.getElementById("signup-username");
+  const signupEmailInput = document.getElementById("signup-email");
+  const signupPasswordInput = document.getElementById("signup-password");
+  const signupMessage = document.getElementById("signup-message");
+  const loginForm = document.getElementById("login-form");
+  const loginIdentifierInput = document.getElementById("login-identifier");
+  const loginPasswordInput = document.getElementById("login-password");
+  const loginMessage = document.getElementById("login-message");
+  const accountCurrent = document.getElementById("account-current");
   let currentTypeGroup = "A";
   let currentCompatibilityGroup = "A";
   let currentResultSlide = 0;
@@ -515,6 +526,8 @@
 
   initMenuNavigation();
   syncProfileInputs();
+  initAccountMenu();
+  handleAccountVerificationFromHash();
   if (state.completed) showResults();
 
   function renderSection() {
@@ -884,6 +897,7 @@
       showCompatibilityCatalogPage();
       renderCompatibilityMenu();
     }
+    if (menuKey === "account") renderCurrentAccount();
   }
 
   function showTypeCatalogPage() {
@@ -1193,6 +1207,134 @@
         container.appendChild(item);
       });
     });
+  }
+
+  function loadAccountStore() {
+    try {
+      const raw = localStorage.getItem(ACCOUNT_STORAGE_KEY);
+      if (!raw) return { accounts: [], activeUserId: null };
+      const parsed = JSON.parse(raw);
+      return { accounts: parsed.accounts ?? [], activeUserId: parsed.activeUserId ?? null };
+    } catch {
+      return { accounts: [], activeUserId: null };
+    }
+  }
+
+  function saveAccountStore(store) {
+    localStorage.setItem(ACCOUNT_STORAGE_KEY, JSON.stringify(store));
+  }
+
+  function passwordValid(password) {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{5,}$/.test(password);
+  }
+
+  function initAccountMenu() {
+    if (signupForm) {
+      signupForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        handleSignup();
+      });
+    }
+    if (loginForm) {
+      loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        handleLogin();
+      });
+    }
+    renderCurrentAccount();
+  }
+
+  function handleSignup() {
+    const username = signupUsernameInput?.value.trim() ?? "";
+    const email = (signupEmailInput?.value.trim() ?? "").toLowerCase();
+    const password = signupPasswordInput?.value ?? "";
+
+    if (!username || !email || !password) {
+      if (signupMessage) signupMessage.innerHTML = "<p>全項目を入力してください。</p>";
+      return;
+    }
+    if (!passwordValid(password)) {
+      if (signupMessage) signupMessage.innerHTML = "<p>パスワード条件を満たしていません（英大/英小/数字を含む5文字以上、記号なし）。</p>";
+      return;
+    }
+
+    const store = loadAccountStore();
+    const duplicate = store.accounts.some((acc) => acc.email === email || acc.username.toLowerCase() === username.toLowerCase());
+    if (duplicate) {
+      if (signupMessage) signupMessage.innerHTML = "<p>同じメールアドレスまたはアカウント名が既に使われています。</p>";
+      return;
+    }
+
+    const id = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+    const token = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 10)}`;
+    const account = { id, username, email, password, verified: false, verifyToken: token, createdAt: new Date().toISOString() };
+    store.accounts.push(account);
+    saveAccountStore(store);
+
+    const returnUrl = `${location.origin}${location.pathname}#verify=${token}`;
+    const subject = encodeURIComponent("【X-TYPE】アカウント登録のお知らせ");
+    const body = encodeURIComponent(`X-TYPEへのアカウント登録ありがとうございます。
+
+アカウント名: ${username}
+
+下記リンクからサイトへ戻って確認を完了してください。
+${returnUrl}`);
+    const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    if (signupMessage) {
+      signupMessage.innerHTML = `<p>確認メールを作成しました。下のリンクから送信して、受信したメール内リンクで確認を完了してください（全メールアドレス形式に対応）。</p>
+        <a class="mail-link" href="${mailto}">確認メールを送る（メールアプリを開く）</a>
+        <p><a class="mail-link" href="${returnUrl}">確認リンクを開く（デモ用）</a></p>`;
+    }
+    signupForm?.reset();
+  }
+
+  function handleAccountVerificationFromHash() {
+    const hash = window.location.hash || "";
+    if (!hash.startsWith("#verify=")) return;
+    const token = hash.replace("#verify=", "").trim();
+    if (!token) return;
+
+    const store = loadAccountStore();
+    const account = store.accounts.find((acc) => acc.verifyToken === token);
+    if (!account) {
+      if (loginMessage) loginMessage.innerHTML = "<p>確認トークンが無効です。</p>";
+      return;
+    }
+    account.verified = true;
+    account.verifyToken = null;
+    saveAccountStore(store);
+    window.history.replaceState(null, "", location.pathname);
+    if (loginMessage) loginMessage.innerHTML = `<p>${account.username} のメール確認が完了しました。ログインできます。</p>`;
+  }
+
+  function handleLogin() {
+    const identifier = loginIdentifierInput?.value.trim() ?? "";
+    const password = loginPasswordInput?.value ?? "";
+    const store = loadAccountStore();
+    const account = store.accounts.find((acc) => acc.email === identifier.toLowerCase() || acc.username === identifier);
+
+    if (!account || account.password !== password) {
+      if (loginMessage) loginMessage.innerHTML = "<p>ログイン情報が正しくありません。</p>";
+      return;
+    }
+    if (!account.verified) {
+      if (loginMessage) loginMessage.innerHTML = "<p>メール確認が完了していません。サインアップ欄の確認リンクで完了してください。</p>";
+      return;
+    }
+
+    store.activeUserId = account.id;
+    saveAccountStore(store);
+    if (loginMessage) loginMessage.innerHTML = `<p>ログイン成功: ${account.username}</p>`;
+    renderCurrentAccount();
+    loginForm?.reset();
+  }
+
+  function renderCurrentAccount() {
+    const store = loadAccountStore();
+    const active = store.accounts.find((acc) => acc.id === store.activeUserId);
+    if (!accountCurrent) return;
+    accountCurrent.textContent = active ? `現在ログイン中: ${active.username}（${active.email}）` : "現在ログインしていません。";
   }
 
   function saveState() {

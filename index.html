@@ -231,14 +231,66 @@
       <section id="menu-mbti" class="menu-screen hidden" aria-label="MBTIとの差分">
         <section class="panel">
           <h2>MBTIとの違い・補完性</h2>
-          <p>このメニューは次の段階で実装します。比較観点の文章を受け取り次第、整理して実装します。</p>
+          <article class="result-block long-detail-view">
+            <h3>X-TYPEとMBTIの違い（要点）</h3>
+            <p><strong>MBTI</strong>は認知や判断傾向の地図、<strong>X-TYPE</strong>は人間関係・行動・役割としての現れ方の設計図です。</p>
+            <h4>着眼点の違い</h4>
+            <ul>
+              <li><strong>MBTI:</strong> 認知機能・判断傾向（E/I, S/N, T/F, J/P）を中心に見る。</li>
+              <li><strong>X-TYPE:</strong> AFN（関わり方）・D/S（行動）・O/I（社会性）・R/S（学び）・A/E（出力方向）で、現実での発現を見る。</li>
+            </ul>
+            <h4>補完関係としての使い方</h4>
+            <p>MBTIで内面のエンジンを読み、X-TYPEで社会・関係の中での役割発現を読むと、立体的に理解できます。</p>
+            <h4>対応表っぽく見る時のコツ（厳密一致ではない）</h4>
+            <p>一対一翻訳ではなく、<strong>雰囲気の近さ</strong>で読むのが正確です。</p>
+            <table class="mapping-table">
+              <thead><tr><th>X-TYPE傾向</th><th>MBTIで近い雰囲気</th></tr></thead>
+              <tbody>
+                <tr><td>A群</td><td>NF / 一部SF</td></tr>
+                <tr><td>F群</td><td>EF / EP / Fe寄り</td></tr>
+                <tr><td>N群</td><td>NT / 一部ST</td></tr>
+                <tr><td>D型</td><td>P寄り / 柔軟型</td></tr>
+                <tr><td>S型（没頭）</td><td>I寄り / 深掘り型</td></tr>
+                <tr><td>O型</td><td>E寄り / 集団運用型</td></tr>
+                <tr><td>I型</td><td>I寄り / 個人完結型</td></tr>
+                <tr><td>R型（体得）</td><td>SP / 実践型</td></tr>
+                <tr><td>S型（習得）</td><td>IJ / NJ / 理解型</td></tr>
+                <tr><td>末尾A / E</td><td>外へ出す方向 / 内へ深める方向</td></tr>
+              </tbody>
+            </table>
+            <p class="profile-note">タグ: 補完（MBTIとの違いと同じタグ）</p>
+          </article>
         </section>
       </section>
 
       <section id="menu-account" class="menu-screen hidden" aria-label="アカウント登録">
         <section class="panel">
           <h2>アカウント登録</h2>
-          <p>メールアドレス登録とログイン保存は、サーバー連携を含むため次の段階で実装します。現段階ではローカル保存のみです。</p>
+          <p class="profile-note">ログイン・サインアップは完全無料です。メール確認後にログインできます。</p>
+          <div class="account-layout">
+            <section class="result-block">
+              <h3>サインアップ</h3>
+              <form id="signup-form" class="account-form">
+                <label>アカウント名<input id="signup-username" type="text" maxlength="24" required placeholder="例: xtype_user" /></label>
+                <label>メールアドレス<input id="signup-email" type="email" required placeholder="example@mail.com" /></label>
+                <label>パスワード<input id="signup-password" type="password" required placeholder="英大文字・英小文字・数字を含む5文字以上" /></label>
+                <p class="profile-note">※ パスワードは英大文字・英小文字・数字を含み、5文字以上、特殊記号なし。</p>
+                <button type="submit" class="btn primary">無料でアカウント作成</button>
+              </form>
+              <div id="signup-message" class="account-message"></div>
+            </section>
+
+            <section class="result-block">
+              <h3>ログイン</h3>
+              <form id="login-form" class="account-form">
+                <label>メールアドレス または アカウント名<input id="login-identifier" type="text" required placeholder="mail または username" /></label>
+                <label>パスワード<input id="login-password" type="password" required /></label>
+                <button type="submit" class="btn">ログイン</button>
+              </form>
+              <div id="login-message" class="account-message"></div>
+              <div id="account-current" class="profile-note"></div>
+            </section>
+          </div>
         </section>
       </section>
     </main>
