@@ -176,11 +176,7 @@
     renderSection();
   });
   document.getElementById("reset-btn").addEventListener("click", resetAll);
-  creatorToggleBtn.addEventListener("click", () => {
-    creatorModal.classList.remove("hidden");
-    creatorModal.setAttribute("aria-hidden", "false");
-    creatorPasscodeInput.focus();
-  });
+  creatorToggleBtn.addEventListener("click", openCreatorModal);
   closeAdminBtn.addEventListener("click", closeCreatorModal);
   openAdminBtn.addEventListener("click", renderCreatorData);
   resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
@@ -609,11 +605,25 @@
     });
   }
 
+  function openCreatorModal() {
+    creatorModal.hidden = false;
+    creatorModal.classList.remove("hidden");
+    creatorModal.style.display = "grid";
+    creatorModal.setAttribute("aria-hidden", "false");
+    creatorPasscodeInput.focus();
+  }
+
   function closeCreatorModal() {
     creatorModal.classList.add("hidden");
+    creatorModal.hidden = true;
+    creatorModal.style.display = "none";
     creatorModal.setAttribute("aria-hidden", "true");
     creatorPasscodeInput.value = "";
   }
+
+  creatorModal.addEventListener("click", (event) => {
+    if (event.target === creatorModal) closeCreatorModal();
+  });
 
   function renderCreatorData() {
     const container = document.getElementById("creator-data-list");
