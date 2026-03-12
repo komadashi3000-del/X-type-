@@ -186,6 +186,9 @@ h4 {
 }
 
 .afn-radar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 12px;
 }
 
@@ -195,6 +198,7 @@ h4 {
   border: 1px solid var(--border);
   border-radius: 12px;
   display: block;
+  margin-inline: auto;
 }
 
 .type-details-layout {
