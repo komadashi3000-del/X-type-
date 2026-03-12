@@ -13,6 +13,17 @@
         <p class="lead">100問に答えて、あなたの X-TYPE コードを診断します。</p>
       </header>
 
+      <nav class="main-menu" aria-label="メインメニュー">
+        <button type="button" class="btn menu-btn active" data-menu="diagnosis">診断本編</button>
+        <button type="button" class="btn menu-btn" data-menu="history">履歴</button>
+        <button type="button" class="btn menu-btn" data-menu="type-details">各タイプの詳細説明</button>
+        <button type="button" class="btn menu-btn" data-menu="compatibility">各タイプ相性</button>
+        <button type="button" class="btn menu-btn" data-menu="mbti">MBTIとの違い・補完性</button>
+        <button type="button" class="btn menu-btn" data-menu="account">アカウント登録</button>
+      </nav>
+
+      <section id="menu-diagnosis" class="menu-screen active" aria-label="診断本編">
+
       <section id="start-screen" class="panel">
         <h2>はじめに</h2>
         <p>
@@ -98,6 +109,10 @@
           <section class="result-slide" data-slide>
             <section class="result-block">
               <h3>性格特性スコア</h3>
+              <div class="afn-radar-wrap">
+                <h4>AFN 三角レーダー</h4>
+                <svg id="afn-radar" class="afn-radar" viewBox="0 0 220 210" role="img" aria-label="AFN三角レーダーグラフ"></svg>
+              </div>
               <div id="score-meters" class="score-meters"></div>
               <ul id="score-list" class="score-list"></ul>
             </section>
@@ -126,7 +141,7 @@
 
           <section class="result-slide" data-slide>
             <section class="result-block">
-              <h3>X-TYPEの深い読み方</h3>
+              <h3>X-TYPEの深い読み方について</h3>
               <div id="deep-reading" class="deep-reading"></div>
             </section>
           </section>
@@ -160,6 +175,47 @@
           <button id="retry-btn" class="btn primary" type="button">もう一度やる</button>
           <button id="reset-btn" class="btn danger" type="button">回答データを初期化する</button>
         </div>
+      </section>
+      </section>
+
+      <section id="menu-history" class="menu-screen hidden" aria-label="履歴画面">
+        <section class="panel">
+          <h2>履歴</h2>
+          <p class="profile-note">入力済みの回答者情報に紐づく履歴のみを表示します。</p>
+          <div id="menu-history-list" class="history-list"></div>
+        </section>
+      </section>
+
+      <section id="menu-type-details" class="menu-screen hidden" aria-label="各タイプの詳細説明">
+        <section class="panel">
+          <h2>各タイプの詳細説明</h2>
+          <p class="profile-note">ここから24タイプの説明をいつでも確認できます。今後の文章差し替えにも対応しています。</p>
+          <div class="type-details-layout">
+            <div id="menu-type-catalog" class="type-catalog"></div>
+            <article id="menu-type-detail-view" class="result-block"></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="menu-compatibility" class="menu-screen hidden" aria-label="各タイプ相性">
+        <section class="panel">
+          <h2>各タイプ相性</h2>
+          <p>このメニューは次の段階で実装します。まずは「各タイプの詳細説明」から拡張していきます。</p>
+        </section>
+      </section>
+
+      <section id="menu-mbti" class="menu-screen hidden" aria-label="MBTIとの差分">
+        <section class="panel">
+          <h2>MBTIとの違い・補完性</h2>
+          <p>このメニューは次の段階で実装します。比較観点の文章を受け取り次第、整理して実装します。</p>
+        </section>
+      </section>
+
+      <section id="menu-account" class="menu-screen hidden" aria-label="アカウント登録">
+        <section class="panel">
+          <h2>アカウント登録</h2>
+          <p>メールアドレス登録とログイン保存は、サーバー連携を含むため次の段階で実装します。現段階ではローカル保存のみです。</p>
+        </section>
       </section>
     </main>
 

@@ -150,14 +150,55 @@ h4 {
 .btn.primary {
   background: linear-gradient(180deg, #6fdcff, var(--primary-strong));
   border-color: #a7e9ff;
-  color: #ffffff;
-  text-shadow: 0 1px 1px rgba(8, 70, 103, 0.45);
+  color: #041018;
+  text-shadow: none;
 }
 
 .btn.danger {
   background: linear-gradient(180deg, #ff95a8, var(--danger-strong));
   border-color: #ffc1cc;
-  color: #fff;
+  color: #2a050b;
+}
+
+.main-menu {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.menu-btn {
+  font-size: 0.9rem;
+  padding: 8px 10px;
+}
+
+.menu-btn.active {
+  border-color: #7ad6ff;
+  box-shadow: 0 0 0 1px #7ad6ff inset;
+  background: linear-gradient(180deg, #b9f0ff, #89dcff);
+  font-weight: 700;
+}
+
+.menu-screen.active {
+  display: block;
+}
+
+.afn-radar-wrap {
+  margin-bottom: 12px;
+}
+
+.afn-radar {
+  width: min(320px, 100%);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: block;
+}
+
+.type-details-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 12px;
 }
 
 .nav-buttons,
@@ -339,6 +380,14 @@ summary {
   .nav-buttons .btn,
   .result-actions .btn {
     width: 100%;
+  }
+
+  .main-menu {
+    grid-template-columns: 1fr;
+  }
+
+  .type-details-layout {
+    grid-template-columns: 1fr;
   }
 }
 

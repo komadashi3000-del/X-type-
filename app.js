@@ -110,10 +110,10 @@
   };
 
   const deepReadingSections = [
-    { title: "同じA群でも、DとSで全然違う", body: "同じ愛情型でも、A-DORは「愛で動く」のに対し、A-SISは「愛を深く考える」。X-TYPEは同じ感情の種類でも、その出方の違いを読む体系である。" },
-    { title: "OとIは社交性ではなく、本領の出る場所", body: "Oだから明るい、Iだから暗い、ではない。Oは人の流れの中で本領が出る。Iは自分の領域で本領が出る。X-TYPEのO/Iは、社交性の多寡ではなく、どこで最も自然に力が出るかを示している。" },
-    { title: "RとStudyは賢さの種類の違い", body: "Rが脳筋でStudyが頭脳派、ということではない。Rは現場で賢い。Studyは構造で賢い。どちらも知性だが、知性の出る場所が違う。" },
-    { title: "A/Eは外向内向ではなく、エネルギーの向き", body: "A/Eは性格の本体ではなく仕上がりの方向性である。同じA-SISでも、A-SISAは外へ研究熱を共有しやすく、A-SISEは内へ深く積みやすい。これは表現方向の差である。" }
+    { title: "同じA群でも、DとSで全然違う", body: "同じ愛情型でも、A-DORは「愛で動く」のに対し、A-SISは「愛を深く考える」。X-TYPEは同じ感情の種類でも、その出方の違いを読み解く体系です。" },
+    { title: "OとIは社交性ではなく、本領の出る場所", body: "Oだから明るい、Iだから暗い、ではない。Oは人の流れの中で本領が出る。Iは自分の領域で本領が出る。X-TYPEのO/Iは、社交性の多寡ではなく、どこで最も自然に力が出るかを示しています。" },
+    { title: "RとStudyは賢さの種類の違い", body: "Rが脳筋でStudyが頭脳派、ということではない。Rは現場で賢い。Studyは構造で賢い。どちらも知性ですが、知性の出る場所が異なります。" },
+    { title: "A/Eは外向内向ではなく、エネルギーの向き", body: "A/Eは性格の本体ではなく、仕上がりの方向性です。同じA-SISでも、A-SISAは外へ研究熱を共有しやすく、A-SISEは内へ深く積みやすい。これは表現方向の差です。" }
   ];
 
   const questionTexts = [
@@ -157,6 +157,8 @@
   const creatorModal = document.getElementById("creator-modal");
   const closeAdminBtn = document.getElementById("close-admin-btn");
   const creatorPasscodeInput = document.getElementById("creator-passcode");
+  const menuButtons = [...document.querySelectorAll(".menu-btn")];
+  const menuScreens = [...document.querySelectorAll(".menu-screen")];
   let currentResultSlide = 0;
 
   document.getElementById("start-btn").addEventListener("click", () => {
@@ -182,6 +184,7 @@
   resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
   resultNextBtn.addEventListener("click", () => moveResultSlide(1));
 
+  initMenuNavigation();
   syncProfileInputs();
   if (state.completed) showResults();
 
@@ -311,6 +314,7 @@
     document.getElementById("official-name").textContent = type.officialName;
     document.getElementById("result-respondent").textContent = state.profile ? `${state.profile.name} / ${state.profile.birthDate} / ${state.profile.gender}` : "未設定";
 
+    renderAFNRadar(scores.AFN);
     renderScoreMeters(scores, type);
     renderScoreList(scores, type);
     renderTypeDetail(type.baseCode);
@@ -351,7 +355,6 @@
     container.innerHTML = "";
 
     const meters = [
-      scoreMeterData("AFN", "A", "N", scores.AFN.A, scores.AFN.N, 5, "#38bdf8"),
       scoreMeterData("D / S", "D", "S", scores.DS.D, scores.DS.S, 20, "#f59e0b"),
       scoreMeterData("O / I", "O", "I", scores.OI.O, scores.OI.I, 20, "#22c55e"),
       scoreMeterData("R / Study", "R", "Study", scores.RS.R, scores.RS.St, 20, "#a78bfa"),
@@ -465,6 +468,118 @@
       card.innerHTML = `<h4>${section.title}</h4><p>${section.body}</p>`;
       container.appendChild(card);
     });
+  }
+
+  function renderAFNRadar(afn) {
+    const svg = document.getElementById("afn-radar");
+    if (!svg) return;
+    const A = afn.A ?? 0;
+    const F = afn.F ?? 0;
+    const N = afn.N ?? 0;
+    const maxAbs = Math.max(1, Math.abs(A), Math.abs(F), Math.abs(N));
+    const center = { x: 110, y: 100 };
+    const radius = 78;
+    const points = [
+      { key: "A", x: center.x, y: center.y - radius },
+      { key: "F", x: center.x - radius * 0.86, y: center.y + radius * 0.5 },
+      { key: "N", x: center.x + radius * 0.86, y: center.y + radius * 0.5 }
+    ];
+
+    function scaledPoint(point, value) {
+      const ratio = Math.max(0, (value + maxAbs) / (2 * maxAbs));
+      return {
+        x: center.x + (point.x - center.x) * ratio,
+        y: center.y + (point.y - center.y) * ratio
+      };
+    }
+
+    const dataPoints = [
+      scaledPoint(points[0], A),
+      scaledPoint(points[1], F),
+      scaledPoint(points[2], N)
+    ];
+
+    const outer = points.map((p) => `${p.x},${p.y}`).join(" ");
+    const dataPath = dataPoints.map((p) => `${p.x},${p.y}`).join(" ");
+
+    svg.innerHTML = `
+      <polygon points="${outer}" fill="rgba(125,211,252,0.2)" stroke="#0369a1" stroke-width="2"></polygon>
+      <polygon points="${dataPath}" fill="rgba(56,189,248,0.38)" stroke="#0c4a6e" stroke-width="2"></polygon>
+      ${points.map((p) => `<text x="${p.x}" y="${p.y - (p.key === "A" ? 8 : -16)}" text-anchor="middle" fill="#0b3651" font-size="13" font-weight="700">${p.key}</text>`).join("")}
+      <text x="110" y="198" text-anchor="middle" fill="#0f3f5e" font-size="12">A=${A.toFixed(1)} / F=${F.toFixed(1)} / N=${N.toFixed(1)}</text>
+    `;
+  }
+
+  function initMenuNavigation() {
+    menuButtons.forEach((btn) => {
+      btn.addEventListener("click", () => showMenu(btn.dataset.menu));
+    });
+  }
+
+  function showMenu(menuKey) {
+    menuButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.menu === menuKey));
+    menuScreens.forEach((screen) => {
+      const active = screen.id === `menu-${menuKey}`;
+      screen.classList.toggle("hidden", !active);
+      screen.classList.toggle("active", active);
+    });
+
+    if (menuKey === "history") renderHistoryMenu();
+    if (menuKey === "type-details") renderTypeDetailsMenu();
+  }
+
+  function renderHistoryMenu() {
+    const container = document.getElementById("menu-history-list");
+    if (!container) return;
+    container.innerHTML = "";
+    if (!state.profile) {
+      container.innerHTML = "<p>診断本編で回答者情報を入力すると履歴を表示できます。</p>";
+      return;
+    }
+    const store = loadHistoryStore();
+    const entries = (store.respondents[profileKey(state.profile)]?.entries ?? []).slice().reverse();
+    if (!entries.length) {
+      container.innerHTML = "<p>履歴はまだありません。</p>";
+      return;
+    }
+    entries.forEach((entry) => {
+      const el = document.createElement("article");
+      el.className = "history-item";
+      el.innerHTML = `<p><strong>${new Date(entry.createdAt).toLocaleString("ja-JP")}</strong></p><p>${entry.fullCode}（${entry.officialName}）</p>`;
+      container.appendChild(el);
+    });
+  }
+
+  function renderTypeDetailsMenu() {
+    const catalog = document.getElementById("menu-type-catalog");
+    const view = document.getElementById("menu-type-detail-view");
+    if (!catalog || !view) return;
+    catalog.innerHTML = "";
+    const current = state.completed ? determineType(computeScores(state.answers)).baseCode : null;
+
+    Object.entries(typeDescriptions).forEach(([code, detail]) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = `type-card ${code === current ? "current" : ""}`;
+      card.innerHTML = `<strong>${code}｜${detail.name}</strong><p>${detail.short}</p>`;
+      card.addEventListener("click", () => {
+        view.innerHTML = `
+          <h3>${code}｜${detail.name}</h3>
+          <p>${detail.short}</p>
+          <p><strong>性格の芯:</strong> ${detail.core}</p>
+          <p><strong>強み:</strong> ${detail.strengths.join(" / ")}</p>
+          <p><strong>弱み:</strong> ${detail.weaknesses.join(" / ")}</p>
+          <p><strong>対人傾向:</strong> ${detail.relations}</p>
+          <p><strong>向いている役割:</strong> ${detail.roles.join(" / ")}</p>
+          <p><strong>深層心理:</strong> ${detail.depth}</p>
+        `;
+      });
+      catalog.appendChild(card);
+    });
+
+    const initialCode = current || Object.keys(typeDescriptions)[0];
+    const initial = typeDescriptions[initialCode];
+    view.innerHTML = `<h3>${initialCode}｜${initial.name}</h3><p>${initial.short}</p><p><strong>性格の芯:</strong> ${initial.core}</p>`;
   }
 
   function showQuiz() {
