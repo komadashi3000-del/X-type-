@@ -189,10 +189,15 @@
       <section id="menu-type-details" class="menu-screen hidden" aria-label="各タイプの詳細説明">
         <section class="panel">
           <h2>各タイプの詳細説明</h2>
-          <p class="profile-note">ここから24タイプの説明をいつでも確認できます。今後の文章差し替えにも対応しています。</p>
+          <p class="profile-note">まず A群 / F群 / N群 を選んでから、各タイプを選択してください。</p>
+          <div class="type-group-tabs" role="tablist" aria-label="タイプ群タブ">
+            <button type="button" class="btn type-group-btn active" data-type-group="A">A群</button>
+            <button type="button" class="btn type-group-btn" data-type-group="F">F群</button>
+            <button type="button" class="btn type-group-btn" data-type-group="N">N群</button>
+          </div>
           <div class="type-details-layout">
-            <div id="menu-type-catalog" class="type-catalog"></div>
-            <article id="menu-type-detail-view" class="result-block"></article>
+            <div id="menu-type-catalog" class="type-catalog grouped-catalog"></div>
+            <article id="menu-type-detail-view" class="result-block long-detail-view"></article>
           </div>
         </section>
       </section>

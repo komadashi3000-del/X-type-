@@ -201,6 +201,44 @@ h4 {
   gap: 12px;
 }
 
+.type-group-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  flex-wrap: wrap;
+}
+
+.type-group-btn.active {
+  background: linear-gradient(180deg, #b9f0ff, #89dcff);
+  border-color: #7ad6ff;
+  box-shadow: 0 0 0 1px #7ad6ff inset;
+  font-weight: 700;
+}
+
+.grouped-catalog {
+  column-count: 1;
+}
+
+.grouped-catalog .type-card {
+  text-align: left;
+  cursor: pointer;
+}
+
+.long-detail-view {
+  max-height: 72vh;
+  overflow: auto;
+  line-height: 1.9;
+}
+
+.long-detail-view h3,
+.long-detail-view h4 {
+  margin-top: 14px;
+}
+
+.long-detail-view p {
+  margin: 8px 0;
+}
+
 .nav-buttons,
 .result-actions {
   display: flex;

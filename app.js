@@ -116,6 +116,159 @@
     { title: "A/Eは外向内向ではなく、エネルギーの向き", body: "A/Eは性格の本体ではなく、仕上がりの方向性です。同じA-SISでも、A-SISAは外へ研究熱を共有しやすく、A-SISEは内へ深く積みやすい。これは表現方向の差です。" }
   ];
 
+  const detailedTypeArticles = {
+    A: {
+      "A-DOR": {
+        title: "勇者（A-DORA/E）",
+        body: `
+          <h3>勇者（A-DORA/E）</h3>
+          <p><strong>愛情を行動へ変えるタイプ</strong>です。守る・動く・背負うを現実の一歩に変換しやすく、危機時に本領を発揮します。</p>
+          <p><strong>A-DORA</strong> は外へ熱を出して先頭に立ちやすく、<strong>A-DORE</strong> は内側で覚悟を固めて必要時に強く動きます。</p>
+          <h4>強み</h4>
+          <ul><li>緊急時の決断と実行</li><li>守る対象への強い責任感</li><li>行動の速さと現場対応力</li></ul>
+          <h4>課題</h4>
+          <ul><li>抱え込み・自己犠牲</li><li>正しさが圧になる</li><li>任せることの難しさ</li></ul>
+          <p>キーワード: 「守るために前へ出る」「信じて託す強さ」</p>
+        `
+      },
+      "A-DOS": {
+        title: "先導者（A-DOSA/E）",
+        body: `
+          <h3>先導者（A-DOSA/E）</h3>
+          <p><strong>愛情を方向性へ変えるタイプ</strong>です。寄り添うだけでなく、より良い進路を示したくなる傾向があります。</p>
+          <p><strong>A-DOSA</strong> は旗を掲げるように外へ示し、<strong>A-DOSE</strong> は内で地図を練ってから示します。</p>
+          <h4>強み</h4>
+          <ul><li>指針提示と伴走</li><li>迷いを進路に変える</li><li>対人支援の実務力</li></ul>
+          <h4>課題</h4>
+          <ul><li>善意が誘導に見える</li><li>待つことが苦手</li><li>相手の自由の余白不足</li></ul>
+          <p>キーワード: 「導く優しさ」「道を照らして任せる」</p>
+        `
+      },
+      "A-DIR": {
+        title: "人情家（A-DIRA/E）",
+        body: `
+          <h3>人情家（A-DIRA/E）</h3>
+          <p><strong>愛情を個人への濃さで向けるタイプ</strong>です。広く平均ではなく「この人」に深く反応します。</p>
+          <p><strong>A-DIRA</strong> は情が外へ出やすく、<strong>A-DIRE</strong> は情を内で深く抱えます。</p>
+          <h4>強み</h4>
+          <ul><li>個別対応の深さ</li><li>見捨てない粘り</li><li>対人の温度感知</li></ul>
+          <h4>課題</h4>
+          <ul><li>抱え込みや境界の薄さ</li><li>偏りやすさ</li><li>消耗の蓄積</li></ul>
+          <p>キーワード: 「分かってくれる人」「優しさと境界の両立」</p>
+        `
+      },
+      "A-DIS": {
+        title: "教師（A-DISA/E）",
+        body: `
+          <h3>教師（A-DISA/E）</h3>
+          <p><strong>愛情を理解と言葉へ変えるタイプ</strong>です。混乱に輪郭を与え、相手が扱える形に整える力があります。</p>
+          <p><strong>A-DISA</strong> は理解を外へ返しやすく、<strong>A-DISE</strong> は内で熟成してから返します。</p>
+          <h4>強み</h4>
+          <ul><li>言語化・整理力</li><li>相談対応の安定感</li><li>対話での支援力</li></ul>
+          <h4>課題</h4>
+          <ul><li>早すぎる整理</li><li>分かったつもりの危険</li><li>支える側固定</li></ul>
+          <p>キーワード: 「分かる形で支える」「未整理さへの敬意」</p>
+        `
+      },
+      "A-SOR": {
+        title: "守護者（A-SORA/E）",
+        body: `
+          <h3>守護者（A-SORA/E）</h3>
+          <p><strong>愛情を守る力に変えるタイプ</strong>です。大切なものを維持し続ける責任感が強く、継続支援に向きます。</p>
+          <p><strong>A-SORA</strong> は前に出て守り、<strong>A-SORE</strong> は静かに抱えて守ります。</p>
+          <h4>強み</h4>
+          <ul><li>継続力と忠誠</li><li>安定運用</li><li>危機時の支柱</li></ul>
+          <h4>課題</h4>
+          <ul><li>過保護・管理化</li><li>変化への警戒</li><li>抱え込み</li></ul>
+          <p>キーワード: 「守る責任」「守ることと解き放つこと」</p>
+        `
+      },
+      "A-SOS": {
+        title: "指揮者（A-SOSA/E）",
+        body: `
+          <h3>指揮者（A-SOSA/E）</h3>
+          <p><strong>愛情を全体の調和へ変えるタイプ</strong>です。人と人の温度差を見て、場が成立するよう整えます。</p>
+          <p><strong>A-SOSA</strong> は表で流れを動かし、<strong>A-SOSE</strong> は内で見極めて調律します。</p>
+          <h4>強み</h4>
+          <ul><li>場の統率と調整</li><li>関係の橋渡し</li><li>運営の安定感</li></ul>
+          <h4>課題</h4>
+          <ul><li>整えすぎによる窮屈さ</li><li>自分の疲れの後回し</li><li>自然発生の熱を待てない</li></ul>
+          <p>キーワード: 「整える力」「整えないで待つ力」</p>
+        `
+      },
+      "A-SIR": {
+        title: "探検家（A-SIRA/E）",
+        body: `
+          <h3>探検家（A-SIRA/E）</h3>
+          <p><strong>愛情を体験へ変えるタイプ</strong>です。考えるだけでなく、自分で触れて確かめることで納得します。</p>
+          <p><strong>A-SIRA</strong> は熱が見えやすく、<strong>A-SIRE</strong> は内燃的に切実さを育てて動きます。</p>
+          <h4>強み</h4>
+          <ul><li>初動と突破力</li><li>実感ベースの理解</li><li>未知への適応</li></ul>
+          <h4>課題</h4>
+          <ul><li>踏み込み過多</li><li>勢い優先</li><li>整理の遅れ</li></ul>
+          <p>キーワード: 「自分で確かめる」「相手の歩幅を守る」</p>
+        `
+      },
+      "A-SIS": {
+        title: "研究者（A-SISA/E）",
+        body: `
+          <h3>研究者（A-SISA/E）</h3>
+          <p><strong>愛情を深掘りへ変えるタイプ</strong>です。表面的な理解で終わらせず、時間をかけて本質へ近づきます。</p>
+          <p><strong>A-SISA</strong> は深さを外へ返しやすく、<strong>A-SISE</strong> は内で熟成してから返します。</p>
+          <h4>強み</h4>
+          <ul><li>深い洞察</li><li>持続的探究</li><li>本質把握</li></ul>
+          <h4>課題</h4>
+          <ul><li>共有の遅れ</li><li>抱え込み</li><li>終わりどころの難しさ</li></ul>
+          <p>キーワード: 「軽く理解しない」「深さを世界へ返す」</p>
+        `
+      }
+    },
+    F: {
+      "F-DOR": {
+        title: "立会人（F-DORA/E）",
+        body: `<h3>立会人（F-DORA/E）</h3><p>場を自然に成立させる接続役です。Aは見える接続、Eは静かな安定で支えます。</p>`
+      },
+      "F-DOS": {
+        title: "調律師（F-DOSA/E）",
+        body: `<h3>調律師（F-DOSA/E）</h3><p>ずれた空気を整えるタイプです。Aは表で和らげ、Eは内で見極めて自然に整えます。</p>`
+      },
+      "F-DIR": {
+        title: "案内人（F-DIRA/E）",
+        body: `<h3>案内人（F-DIRA/E）</h3><p>人を前へつなぐ導線づくりが得意です。Aは見える案内、Eは静かな入口設計が特徴です。</p>`
+      },
+      "F-DIS": {
+        title: "調停者（F-DISA/E）",
+        body: `<h3>調停者（F-DISA/E）</h3><p>衝突をやわらげ、関係を通し直すタイプです。Aは橋を外へかけ、Eは痛みを受け止めてから橋をかけます。</p>`
+      },
+      "F-SOR": {
+        title: "立役者（F-SORA/E）",
+        body: `<h3>立役者（F-SORA/E）</h3><p>場の熱を生み、流れを動かすタイプです。Aは可視的な起爆役、Eは必要時に深く火を入れる内燃型です。</p>`
+      },
+      "F-SOS": {
+        title: "監督（F-SOSA/E）",
+        body: `<h3>監督（F-SOSA/E）</h3><p>全体を構成し回すタイプです。Aは表で進行、Eは裏で骨組みを整える運用者です。</p>`
+      },
+      "F-SIR": {
+        title: "革新家（F-SIRA/E）",
+        body: `<h3>革新家（F-SIRA/E）</h3><p>新しい流れを起こす更新者です。Aは即時に試し、Eは見極めて変化を起こします。</p>`
+      },
+      "F-SIS": {
+        title: "開発者（F-SISA/E）",
+        body: `<h3>開発者（F-SISA/E）</h3><p>人や場の熱を形にして積み上げるタイプです。Aは外へ実装、Eは内で完成度を高めます。</p>`
+      }
+    },
+    N: {
+      "N-DOR": { title: "批評家", body: "<h3>N群詳細は次回反映予定</h3><p>N群の本文データ受領後、A/F群と同じ粒度で実装します。</p>" },
+      "N-DOS": { title: "是正者", body: "<h3>N群詳細は次回反映予定</h3><p>まずはA群・F群の詳細表示構造を優先実装しました。</p>" },
+      "N-DIR": { title: "観察家", body: "<h3>N群詳細は次回反映予定</h3><p>タイプ本文を受け取り次第追加します。</p>" },
+      "N-DIS": { title: "書記官", body: "<h3>N群詳細は次回反映予定</h3><p>タイプ本文を受け取り次第追加します。</p>" },
+      "N-SOR": { title: "裁判官", body: "<h3>N群詳細は次回反映予定</h3><p>タイプ本文を受け取り次第追加します。</p>" },
+      "N-SOS": { title: "設計士", body: "<h3>N群詳細は次回反映予定</h3><p>タイプ本文を受け取り次第追加します。</p>" },
+      "N-SIR": { title: "分析官", body: "<h3>N群詳細は次回反映予定</h3><p>タイプ本文を受け取り次第追加します。</p>" },
+      "N-SIS": { title: "哲学者", body: "<h3>N群詳細は次回反映予定</h3><p>タイプ本文を受け取り次第追加します。</p>" }
+    }
+  };
+
   const questionTexts = [
     "一対一で深く向き合う時間に満足を感じる。","どんな場でもすぐ輪に入りフラットに話せる。","感情に流されず公平な距離感を保つ方だ。","相手の心情を汲み取り寄り添うことを優先する。","ラフな冗談と軽いノリで関係を温めるのが得意だ。","誰に対しても同じ原則で接するよう努める。","大切な人とは密度の高い関係を築きたい。","初対面でも広く友達になれる自信がある。","相手との距離を適切に取り直せる。","親密な約束や節目を大事にする。","集まりの雰囲気を軽く明るくする役回りが多い。","状況のバランスを見て個人感情を抑えられる。","一人を丁寧に支える方が性に合う。","気軽な関係を多めに持っていたい。","原則に反しても情だけでは動かない。",
     "何をするにも、その場の状況に合わせてやり方を変える方だ。","一つのことを始めると、時間を忘れて没頭してしまう。","複数の作業を並行してそつなく回せる。","興味を持ったことは、とことん突き詰めないと気が済まない。","新しい環境や人に慣れるのは早い方だ。","一度好きになったことは、飽きても完全には離れられない。","その場の空気を読んで動くのが得意だ。","物事を深く考え込みすぎて、時間を忘れることがある。","状況に応じて行動を切り替えるのが自然にできる。","自分の世界に入り込み、他人の声が聞こえなくなることがある。","環境や人間関係が変わっても、すぐに順応できる。","得意な分野では、誰にも負けたくないと思う。","予定が変わっても、特に動揺はしない。","興味のあることに集中している時、周囲のことを完全に忘れる。","求められた役割に合わせて、自分を調整するのが上手い。","ひとつのテーマを何年もかけて磨くことが好きだ。","その場のノリや即興で動くことが多い。","自分のこだわりを貫くことに喜びを感じる。","柔軟さを失うより、深さを失う方が怖い。","変化に対応する方が得意か、集中し続ける方が得意かといえば前者だ。",
@@ -159,6 +312,8 @@
   const creatorPasscodeInput = document.getElementById("creator-passcode");
   const menuButtons = [...document.querySelectorAll(".menu-btn")];
   const menuScreens = [...document.querySelectorAll(".menu-screen")];
+  const typeGroupButtons = [...document.querySelectorAll(".type-group-btn")];
+  let currentTypeGroup = "A";
   let currentResultSlide = 0;
 
   document.getElementById("start-btn").addEventListener("click", () => {
@@ -514,6 +669,13 @@
     menuButtons.forEach((btn) => {
       btn.addEventListener("click", () => showMenu(btn.dataset.menu));
     });
+    typeGroupButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        currentTypeGroup = btn.dataset.typeGroup;
+        typeGroupButtons.forEach((b) => b.classList.toggle("active", b === btn));
+        renderTypeDetailsMenu();
+      });
+    });
   }
 
   function showMenu(menuKey) {
@@ -554,32 +716,29 @@
     const catalog = document.getElementById("menu-type-catalog");
     const view = document.getElementById("menu-type-detail-view");
     if (!catalog || !view) return;
-    catalog.innerHTML = "";
-    const current = state.completed ? determineType(computeScores(state.answers)).baseCode : null;
 
-    Object.entries(typeDescriptions).forEach(([code, detail]) => {
+    const groupData = detailedTypeArticles[currentTypeGroup] ?? {};
+    const keys = Object.keys(groupData);
+
+    catalog.innerHTML = "";
+    if (!keys.length) {
+      view.innerHTML = "<p>この群の詳細データはまだありません。</p>";
+      return;
+    }
+
+    keys.forEach((code) => {
+      const detail = groupData[code];
       const card = document.createElement("button");
       card.type = "button";
-      card.className = `type-card ${code === current ? "current" : ""}`;
-      card.innerHTML = `<strong>${code}｜${detail.name}</strong><p>${detail.short}</p>`;
+      card.className = "type-card";
+      card.innerHTML = `<strong>${code}｜${detail.title}</strong><p>クリックして詳細を表示</p>`;
       card.addEventListener("click", () => {
-        view.innerHTML = `
-          <h3>${code}｜${detail.name}</h3>
-          <p>${detail.short}</p>
-          <p><strong>性格の芯:</strong> ${detail.core}</p>
-          <p><strong>強み:</strong> ${detail.strengths.join(" / ")}</p>
-          <p><strong>弱み:</strong> ${detail.weaknesses.join(" / ")}</p>
-          <p><strong>対人傾向:</strong> ${detail.relations}</p>
-          <p><strong>向いている役割:</strong> ${detail.roles.join(" / ")}</p>
-          <p><strong>深層心理:</strong> ${detail.depth}</p>
-        `;
+        view.innerHTML = detail.body;
       });
       catalog.appendChild(card);
     });
 
-    const initialCode = current || Object.keys(typeDescriptions)[0];
-    const initial = typeDescriptions[initialCode];
-    view.innerHTML = `<h3>${initialCode}｜${initial.name}</h3><p>${initial.short}</p><p><strong>性格の芯:</strong> ${initial.core}</p>`;
+    view.innerHTML = groupData[keys[0]].body;
   }
 
   function showQuiz() {
