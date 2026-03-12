@@ -1,10 +1,9 @@
 // X-TYPE 診断テスト: 質問・採点・結果解説の一元管理
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
   const STORAGE_KEY = "xtype-test-state-v1";
   const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
   const ACCOUNT_STORAGE_KEY = "xtype-account-store-v1";
   const CREATOR_PASSCODE = "seiju_erosugidaro";
-
   const OPTIONS = [
     { label: "はい", value: 2 },
     { label: "ややはい", value: 1 },
@@ -1045,28 +1044,32 @@ A-DIR は、全員に同じだけ優しい人ではありません。興味の�
   let currentCompatibilityGroup = "A";
   let currentResultSlide = 0;
 
-  document.getElementById("start-btn").addEventListener("click", () => {
-    const profile = collectRespondentProfile();
-    if (!profile) return;
-    state.profile = profile;
-    saveState();
-    showQuiz();
-    renderSection();
-  });
-  document.getElementById("next-btn").addEventListener("click", handleNext);
-  document.getElementById("prev-btn").addEventListener("click", handlePrev);
-  document.getElementById("retry-btn").addEventListener("click", () => {
-    state.currentSection = 0;
-    saveState();
-    showQuiz();
-    renderSection();
-  });
-  document.getElementById("reset-btn").addEventListener("click", resetAll);
-  if (creatorToggleBtn) creatorToggleBtn.addEventListener("click", openCreatorModal);
-  if (closeAdminBtn) closeAdminBtn.addEventListener("click", closeCreatorModal);
-  if (openAdminBtn) openAdminBtn.addEventListener("click", renderCreatorData);
-  resultPrevBtn.addEventListener("click", () => moveResultSlide(-1));
-  resultNextBtn.addEventListener("click", () => moveResultSlide(1));
+  document.getElementById("start-btn")?.addEventListener("click", () => {
+  const profile = collectRespondentProfile();
+  if (!profile) return;
+  state.profile = profile;
+  saveState();
+  showQuiz();
+  renderSection();
+});
+
+document.getElementById("next-btn")?.addEventListener("click", handleNext);
+document.getElementById("prev-btn")?.addEventListener("click", handlePrev);
+
+document.getElementById("retry-btn")?.addEventListener("click", () => {
+  state.currentSection = 0;
+  saveState();
+  showQuiz();
+  renderSection();
+});
+
+document.getElementById("reset-btn")?.addEventListener("click", resetAll);
+
+creatorToggleBtn?.addEventListener("click", openCreatorModal);
+closeAdminBtn?.addEventListener("click", closeCreatorModal);
+openAdminBtn?.addEventListener("click", renderCreatorData);
+resultPrevBtn?.addEventListener("click", () => moveResultSlide(-1));
+resultNextBtn?.addEventListener("click", () => moveResultSlide(1));
 
   initMenuNavigation();
   syncProfileInputs();
@@ -1886,4 +1889,6 @@ ${returnUrl}`);
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
-})();
+});
+
+
