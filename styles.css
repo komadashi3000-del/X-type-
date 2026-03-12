@@ -197,8 +197,12 @@ h4 {
 
 .type-details-layout {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
+}
+
+.detail-page-header {
+  margin: 8px 0 10px;
 }
 
 .type-group-tabs {

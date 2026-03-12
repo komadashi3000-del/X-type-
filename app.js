@@ -478,6 +478,14 @@
   const menuScreens = [...document.querySelectorAll(".menu-screen")];
   const typeGroupButtons = [...document.querySelectorAll(".type-group-btn")];
   const compGroupButtons = [...document.querySelectorAll(".comp-group-btn")];
+  const typeCatalogPage = document.getElementById("type-catalog-page");
+  const typeDetailPage = document.getElementById("menu-type-detail-page");
+  const typeDetailView = document.getElementById("menu-type-detail-view");
+  const typeDetailBackBtn = document.getElementById("menu-type-detail-back");
+  const compatCatalogPage = document.getElementById("compat-catalog-page");
+  const compatDetailPage = document.getElementById("compat-detail-page");
+  const compatDetailView = document.getElementById("compat-detail-view");
+  const compatDetailBackBtn = document.getElementById("compat-detail-back");
   let currentTypeGroup = "A";
   let currentCompatibilityGroup = "A";
   let currentResultSlide = 0;
@@ -839,6 +847,7 @@
       btn.addEventListener("click", () => {
         currentTypeGroup = btn.dataset.typeGroup;
         typeGroupButtons.forEach((b) => b.classList.toggle("active", b === btn));
+        showTypeCatalogPage();
         renderTypeDetailsMenu();
       });
     });
@@ -846,9 +855,16 @@
       btn.addEventListener("click", () => {
         currentCompatibilityGroup = btn.dataset.compGroup;
         compGroupButtons.forEach((b) => b.classList.toggle("active", b === btn));
+        showCompatibilityCatalogPage();
         renderCompatibilityMenu();
       });
     });
+    if (typeDetailBackBtn) {
+      typeDetailBackBtn.addEventListener("click", showTypeCatalogPage);
+    }
+    if (compatDetailBackBtn) {
+      compatDetailBackBtn.addEventListener("click", showCompatibilityCatalogPage);
+    }
   }
 
   function showMenu(menuKey) {
@@ -860,8 +876,34 @@
     });
 
     if (menuKey === "history") renderHistoryMenu();
-    if (menuKey === "type-details") renderTypeDetailsMenu();
-    if (menuKey === "compatibility") renderCompatibilityMenu();
+    if (menuKey === "type-details") {
+      showTypeCatalogPage();
+      renderTypeDetailsMenu();
+    }
+    if (menuKey === "compatibility") {
+      showCompatibilityCatalogPage();
+      renderCompatibilityMenu();
+    }
+  }
+
+  function showTypeCatalogPage() {
+    typeCatalogPage?.classList.remove("hidden");
+    typeDetailPage?.classList.add("hidden");
+  }
+
+  function showTypeDetailPage() {
+    typeCatalogPage?.classList.add("hidden");
+    typeDetailPage?.classList.remove("hidden");
+  }
+
+  function showCompatibilityCatalogPage() {
+    compatCatalogPage?.classList.remove("hidden");
+    compatDetailPage?.classList.add("hidden");
+  }
+
+  function showCompatibilityDetailPage() {
+    compatCatalogPage?.classList.add("hidden");
+    compatDetailPage?.classList.remove("hidden");
   }
 
   function renderHistoryMenu() {
@@ -888,15 +930,14 @@
 
   function renderTypeDetailsMenu() {
     const catalog = document.getElementById("menu-type-catalog");
-    const view = document.getElementById("menu-type-detail-view");
-    if (!catalog || !view) return;
+    if (!catalog || !typeDetailView) return;
 
     const groupData = detailedTypeArticles[currentTypeGroup] ?? {};
     const keys = Object.keys(groupData);
 
     catalog.innerHTML = "";
     if (!keys.length) {
-      view.innerHTML = "<p>この群の詳細データはまだありません。</p>";
+      typeDetailView.innerHTML = "<p>この群の詳細データはまだありません。</p>";
       return;
     }
 
@@ -907,26 +948,24 @@
       card.className = "type-card";
       card.innerHTML = `<strong>${code}｜${detail.title}</strong><p>クリックして詳細を表示</p>`;
       card.addEventListener("click", () => {
-        view.innerHTML = detail.body;
+        typeDetailView.innerHTML = detail.body;
+        showTypeDetailPage();
       });
       catalog.appendChild(card);
     });
-
-    view.innerHTML = groupData[keys[0]].body;
   }
 
 
   function renderCompatibilityMenu() {
     const catalog = document.getElementById("compat-catalog");
-    const view = document.getElementById("compat-detail-view");
-    if (!catalog || !view) return;
+    if (!catalog || !compatDetailView) return;
 
     const groupData = compatibilityArticles[currentCompatibilityGroup] ?? {};
     const keys = Object.keys(groupData);
     catalog.innerHTML = "";
 
     if (!keys.length) {
-      view.innerHTML = "<p>この群の相性データはまだありません。</p>";
+      compatDetailView.innerHTML = "<p>この群の相性データはまだありません。</p>";
       return;
     }
 
@@ -937,12 +976,11 @@
       card.className = "type-card";
       card.innerHTML = `<strong>${code}｜${item.name}</strong><p>クリックして相性詳細を表示</p>`;
       card.addEventListener("click", () => {
-        view.innerHTML = renderCompatibilityDetailHTML(code, item);
+        compatDetailView.innerHTML = renderCompatibilityDetailHTML(code, item);
+        showCompatibilityDetailPage();
       });
       catalog.appendChild(card);
     });
-
-    view.innerHTML = renderCompatibilityDetailHTML(keys[0], groupData[keys[0]]);
   }
 
   function renderCompatibilityDetailHTML(code, item) {
