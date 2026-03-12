@@ -1503,19 +1503,6 @@ function renderTypeDetailsMenu() {
     const detail = groupData[code];
     if (!detail) return;
 
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "type-card";
-    card.innerHTML = `<strong>${code}｜${detail.title}</strong><p>クリックして詳細を表示</p>`;
-
-    card.addEventListener("click", () => {
-      typeDetailView.innerHTML = detail.body;
-      showTypeDetailPage();
-    });
-
-    catalog.appendChild(card);
-  });
-}
       const card = document.createElement("button");
       card.type = "button";
       card.className = "type-card";
