@@ -283,14 +283,15 @@
 
             <section class="result-block">
               <h3>ログイン</h3>
-              <form id="login-form" class="account-form">
-               <label>メールアドレス
-<label>メールアドレス
-  <input id="login-identifier" type="email" required placeholder="example@mail.com" />
-</label>
-                <label>パスワード<input id="login-password" type="password" required /></label>
-                <button type="submit" class="btn">ログイン</button>
-              </form>
+            <form id="login-form" class="account-form">
+  <label>メールアドレス
+    <input id="login-identifier" type="email" required placeholder="example@mail.com" />
+  </label>
+  <label>パスワード
+    <input id="login-password" type="password" required />
+  </label>
+  <button type="submit" class="btn">ログイン</button>
+</form>
               <div id="login-message" class="account-message"></div>
               <div id="account-current" class="profile-note"></div>
             </section>
@@ -302,8 +303,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-  const SUPABASE_URL = "https://あなたのプロジェクトID.supabase.co";
-  const SUPABASE_ANON_KEY = "あなたのanon key";
+  const SUPABASE_URL = "https://kcozjucczweludoouxae.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtjb3pqdWNjendlbHVkb291eGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMzg2MjQsImV4cCI6MjA4ODkxNDYyNH0.W5qPN8BfA98fTSPo-eKlTnVRAaXkyWXqNI_g3W8sEWE";
 
   window.supabaseClient = supabase.createClient(
     SUPABASE_URL,
