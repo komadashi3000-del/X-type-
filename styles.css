@@ -969,5 +969,18 @@ h1, h2, h3, h4, p, li, label, .profile-note, .lead, .summary {
 #compat-detail-page.hidden {
   display: none;
 }
+.question {
+  position: relative;
+  ...
+  box-shadow: var(--glass-shadow), var(--glass-highlight), var(--glass-bottom);
+  backdrop-filter: blur(14px) saturate(132%);
+  ...
+}
 
+.question {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.38));
+}
 }
