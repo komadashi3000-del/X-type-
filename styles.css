@@ -144,13 +144,6 @@ h4 {
   pointer-events: none;
 }
 
-.question {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.38));
-}
-
 .question p {
   margin: 0 0 8px;
 }
