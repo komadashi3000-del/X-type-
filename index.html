@@ -45,13 +45,20 @@
             </label>
             <label>
               性別
-              <select id="respondent-gender" required>
-                <option value="" selected disabled>選択してください</option>
-                <option value="男性">男性</option>
-                <option value="女性">女性</option>
-                <option value="自認回答"> <input id="respondent-name" type="text" maxlength="40" required placeholder="例: 自認性別" /></option>
-              </select>
-            </label>
+             <label>
+  性別
+  <select id="respondent-gender" required>
+    <option value="" selected disabled>選択してください</option>
+    <option value="男性">男性</option>
+    <option value="女性">女性</option>
+    <option value="自認回答">自認回答</option>
+  </select>
+</label>
+
+<label id="gender-custom-wrap" class="hidden">
+  自認性別
+  <input id="respondent-gender-custom" type="text" maxlength="40" placeholder="例: ノンバイナリー" />
+</label>
           </div>
           <p class="profile-note">※ 回答履歴は同じ回答者情報で紐づけます。</p>
         </section>
@@ -199,10 +206,12 @@
           <div id="type-catalog-page" class="type-details-layout">
             <div id="menu-type-catalog" class="type-catalog grouped-catalog"></div>
           </div>
-          <section id="menu-type-detail-page" class="hidden" aria-label="タイプ詳細ページ">
-       <div class="detail-page-footer">
+       <section id="menu-type-detail-page" class="hidden" aria-label="タイプ詳細ページ">
+  <article id="menu-type-detail-view" class="result-block long-detail-view"></article>
+  <div class="detail-page-footer">
     <button id="menu-type-detail-back" type="button" class="btn">← 項目一覧に戻る</button>
   </div>
+</section>
             <article id="menu-type-detail-view" class="result-block long-detail-view"></article>
           </section>
         </section>
@@ -221,9 +230,11 @@
             <div id="compat-catalog" class="type-catalog grouped-catalog"></div>
           </div>
           <section id="compat-detail-page" class="hidden" aria-label="相性詳細ページ">
-            <div class="detail-page-footer">
-    <button id="menu-type-detail-back" type="button" class="btn">← 項目一覧に戻る</button>
+  <article id="compat-detail-view" class="result-block long-detail-view"></article>
+  <div class="detail-page-footer">
+    <button id="compat-detail-back" type="button" class="btn">← 項目一覧に戻る</button>
   </div>
+</section>
             <article id="compat-detail-view" class="result-block long-detail-view"></article>
           </section>
         </section>
@@ -259,8 +270,6 @@
                 <tr><td>末尾A / E</td><td>外へ出す方向 / 内へ深める方向</td></tr>
               </tbody>
             </table>
-            <p class="profile-note">タグ: 補完（MBTIとの違いと同じタグ）</p>
-          </article>
         </section>
       </section>
 
