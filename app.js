@@ -1124,7 +1124,6 @@ supabase.auth.onAuthStateChange(() => {
     document.getElementById("prev-btn").disabled = state.currentSection === 0;
     document.getElementById("next-btn").textContent = state.currentSection === sectionConfigs.length - 1 ? "結果を見る" : "次へ";
   }
-
 async function handleNext() {
   const section = sectionConfigs[state.currentSection];
   const sectionQuestions = questions.filter((q) => q.id >= section.start && q.id <= section.end);
@@ -1147,12 +1146,13 @@ async function handleNext() {
 
   try {
     await persistHistory(scores, type);
-    state.completed = true;
-    saveState();
-    showResults();
   } catch (error) {
-    window.alert(error.message || "診断結果の保存に失敗しました。");
+    console.error("保存失敗:", error);
   }
+
+  state.completed = true;
+  saveState();
+  showResults();
 }
   
   function handlePrev() {
@@ -1757,14 +1757,14 @@ function resetAll() {
 
 async function persistHistory(scores, type) {
   if (!state.profile) {
-    throw new Error("回答者情報がありません。");
+    return;
   }
 
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const user = userData?.user;
 
   if (userError || !user) {
-    throw new Error("診断結果の保存にはログインが必要です。");
+    return;
   }
 
   const { error } = await supabase
