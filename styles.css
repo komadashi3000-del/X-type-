@@ -819,17 +819,6 @@ body {
   overflow-x: hidden;
 }
 
-/* フォーム系がはみ出さないようにする */
-input,
-select,
-button,
-textarea {
-  max-width: 100%;
-  width: 100%;
-  min-width: 0;
-  font: inherit;
-}
-
 /* ラベルの中身を縦並びにして崩れ防止 */
 label {
   display: block;
