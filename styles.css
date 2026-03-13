@@ -288,9 +288,14 @@ h4 {
 }
 
 .long-detail-view {
-  max-height: 72vh;
-  overflow: auto;
+  width: 100%;
+  max-width: 100%;
+  min-height: 320px;
+  max-height: none;
+  overflow: visible;
   line-height: 1.9;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .long-detail-view h3,
@@ -298,8 +303,29 @@ h4 {
   margin-top: 14px;
 }
 
-.long-detail-view p {
-  margin: 8px 0;
+.long-detail-view {
+  width: 100%;
+  max-width: 100%;
+  min-height: 320px;
+  max-height: none;
+  overflow: visible;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#menu-type-detail-page {
+  width: 100%;
+  margin-top: 16px;
+}
+
+#menu-type-detail-view {
+  width: 100%;
+  max-width: 100%;
+}
+
+#menu-type-detail-page .result-block {
+  padding: 18px;
 }
 
 .nav-buttons,
@@ -890,5 +916,29 @@ h1, h2, h3, h4, p, li, label, .profile-note, .lead, .summary {
   .result-actions,
   .nav-buttons {
     padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}
+#menu-type-detail-page {
+  margin-top: 16px;
+}
+
+.type-card.active {
+  border-color: #31b5ff;
+  box-shadow:
+    0 0 0 2px rgba(49, 181, 255, 0.22),
+    var(--glass-shadow),
+    var(--glass-highlight),
+    var(--glass-bottom);
+}
+
+@media (max-width: 768px) {
+  .long-detail-view {
+    min-height: auto;
+    font-size: 0.96rem;
+    line-height: 1.8;
+  }
+
+  #menu-type-detail-page .result-block {
+    padding: 14px;
   }
 }
