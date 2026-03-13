@@ -298,9 +298,15 @@ h4 {
   word-break: break-word;
 }
 
-.long-detail-view h3,
-.long-detail-view h4 {
-  margin-top: 14px;
+.long-detail-view {
+  width: 100%;
+  max-width: 100%;
+  min-height: 320px;
+  max-height: none;
+  overflow: visible;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .long-detail-view {
