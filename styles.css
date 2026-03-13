@@ -948,3 +948,24 @@ h1, h2, h3, h4, p, li, label, .profile-note, .lead, .summary {
     padding: 14px;
   }
 }
+.detail-page-footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.detail-page-footer .btn {
+  width: auto;
+  min-width: 220px;
+}
+
+@media (max-width: 768px) {
+  .detail-page-footer {
+    display: block;
+  }
+
+  .detail-page-footer .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
