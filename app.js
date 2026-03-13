@@ -4,9 +4,11 @@ const STORAGE_KEY = "xtype-test-state-v1";
 const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
 const supabase = window.supabaseClient;
 
+const supabase = window.supabaseClient ?? null;
+
 if (!supabase) {
-  console.error("Supabase client is not initialized.");
-  return;
+  console.warn("Supabase client is not initialized.");
+
 }
   const OPTIONS = [
     { label: "はい", value: 2 },
