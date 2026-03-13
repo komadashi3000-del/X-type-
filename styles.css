@@ -958,6 +958,16 @@ h1, h2, h3, h4, p, li, label, .profile-note, .lead, .summary {
   .detail-page-footer {
     display: block;
   }
+  
+.detail-page-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
 
+#menu-type-detail-page.hidden,
+#compat-detail-page.hidden {
+  display: none;
+}
 
 }
