@@ -690,3 +690,144 @@ body::after {
     grid-template-columns: 1fr;
   }
 }
+
+/* まず全体の幅計算を安定させる */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+/* アプリ全体 */
+.app {
+  width: min(100%, 960px);
+  margin: 0 auto;
+  padding: 12px;
+}
+
+/* パネル類 */
+.panel,
+.result-block,
+.result-card,
+.creator-modal-card {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* フォーム系がはみ出さないようにする */
+input,
+select,
+button,
+textarea {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+}
+
+/* ラベルの中身を縦並びにして崩れ防止 */
+label {
+  display: block;
+  width: 100%;
+}
+
+/* プロフィール入力欄 */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* 長い日本語が無理やり横にはみ出さないようにする */
+h1, h2, h3, h4, p, li, label, .profile-note, .lead, .summary {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* メインメニュー */
+.main-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.main-menu .btn {
+  width: 100%;
+}
+
+/* ナビボタン */
+.nav-buttons,
+.result-actions,
+.result-pager-controls,
+.admin-gate {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+/* モーダル */
+.creator-modal {
+  padding: 16px;
+}
+
+.creator-modal-card {
+  width: min(100%, 560px);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* テーブルや詳細ブロックが溢れる時の保険 */
+.mapping-table,
+.long-detail-view,
+.type-catalog,
+.history-list {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* スマホ用 */
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+
+  .app-header h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .panel {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .profile-grid {
+    gap: 14px;
+  }
+
+  /* Safari下部バー対策 */
+  .result-actions,
+  .nav-buttons {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}
