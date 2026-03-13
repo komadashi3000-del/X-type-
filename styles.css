@@ -194,3 +194,34 @@ h3 {
     width: 100%;
   }
 }
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.options label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+  word-break: keep-all;
+  white-space: normal;
+}
+
+.options input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin: 0;
+}
+
+.options label span {
+  display: inline-block;
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+}
