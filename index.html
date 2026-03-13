@@ -49,7 +49,7 @@
                 <option value="" selected disabled>選択してください</option>
                 <option value="男性">男性</option>
                 <option value="女性">女性</option>
-                <option value="自認回答">自認回答</option>
+                <option value="自認回答"> <input id="respondent-name" type="text" maxlength="40" required placeholder="例: 自認性別" /></option>
               </select>
             </label>
           </div>
@@ -200,9 +200,9 @@
             <div id="menu-type-catalog" class="type-catalog grouped-catalog"></div>
           </div>
           <section id="menu-type-detail-page" class="hidden" aria-label="タイプ詳細ページ">
-            <div class="detail-page-header">
-              <button id="menu-type-detail-back" type="button" class="btn">← 項目一覧に戻る</button>
-            </div>
+       <div class="detail-page-footer">
+    <button id="menu-type-detail-back" type="button" class="btn">← 項目一覧に戻る</button>
+  </div>
             <article id="menu-type-detail-view" class="result-block long-detail-view"></article>
           </section>
         </section>
@@ -221,9 +221,9 @@
             <div id="compat-catalog" class="type-catalog grouped-catalog"></div>
           </div>
           <section id="compat-detail-page" class="hidden" aria-label="相性詳細ページ">
-            <div class="detail-page-header">
-              <button id="compat-detail-back" type="button" class="btn">← 項目一覧に戻る</button>
-            </div>
+            <div class="detail-page-footer">
+    <button id="menu-type-detail-back" type="button" class="btn">← 項目一覧に戻る</button>
+  </div>
             <article id="compat-detail-view" class="result-block long-detail-view"></article>
           </section>
         </section>
@@ -247,15 +247,15 @@
             <table class="mapping-table">
               <thead><tr><th>X-TYPE傾向</th><th>MBTIで近い雰囲気</th></tr></thead>
               <tbody>
-                <tr><td>A群</td><td>NF / 一部SF</td></tr>
-                <tr><td>F群</td><td>EF / EP / Fe寄り</td></tr>
-                <tr><td>N群</td><td>NT / 一部ST</td></tr>
-                <tr><td>D型</td><td>P寄り / 柔軟型</td></tr>
-                <tr><td>S型（没頭）</td><td>I寄り / 深掘り型</td></tr>
+                <tr><td>A群</td><td>I</td></tr>
+                <tr><td>F群</td><td>E </td></tr>
+                <tr><td>N群</td><td>I / E</td></tr>
+                <tr><td>D型</td><td>J / 汎用型</td></tr>
+                <tr><td>S型（没頭）</td><td>P / 特化型</td></tr>
                 <tr><td>O型</td><td>E寄り / 集団運用型</td></tr>
                 <tr><td>I型</td><td>I寄り / 個人完結型</td></tr>
-                <tr><td>R型（体得）</td><td>SP / 実践型</td></tr>
-                <tr><td>S型（習得）</td><td>IJ / NJ / 理解型</td></tr>
+                <tr><td>R型（体得）</td><td>S・P / 実践型</td></tr>
+                <tr><td>S型（習得）</td><td>T・J / 理解型</td></tr>
                 <tr><td>末尾A / E</td><td>外へ出す方向 / 内へ深める方向</td></tr>
               </tbody>
             </table>
