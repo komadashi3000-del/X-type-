@@ -1,15 +1,13 @@
   // X-TYPE 診断テスト: 質問・採点・結果解説の一元管理
 document.addEventListener("DOMContentLoaded", () => {
-const STORAGE_KEY = "xtype-test-state-v1";
-const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
-const supabase = window.supabaseClient;
+  const STORAGE_KEY = "xtype-test-state-v1";
+  const HISTORY_STORAGE_KEY = "xtype-test-history-v1";
+  const supabase = window.supabaseClient ?? null;
 
-const supabase = window.supabaseClient ?? null;
+  if (!supabase) {
+    console.warn("Supabase client is not initialized.");
+  }
 
-if (!supabase) {
-  console.warn("Supabase client is not initialized.");
-
-}
   const OPTIONS = [
     { label: "はい", value: 2 },
     { label: "ややはい", value: 1 },
@@ -18,7 +16,7 @@ if (!supabase) {
     { label: "ややいいえ", value: -1 },
     { label: "いいえ", value: -2 }
   ];
-
+  
   const sectionConfigs = [
     { id: "AFN", title: "セクション1: AFN（15問）", description: "愛情型・友情型・中立型の傾向を見ます。", start: 1, end: 15 },
     { id: "DS", title: "セクション2: D/S（20問）", description: "汎用型と没頭型の傾向を見ます。", start: 16, end: 35 },
@@ -2466,7 +2464,7 @@ A-SISE は、見つけたものを熟成させる。</p>
 研究者が本当に美しいのは、<strong>深く見抜く力を持ちながら、その深さをちゃんと世界へ返せるようになった時</strong>です。</p>
   `
 },
-
+  },
   F: {
     "F-DOR": {
       title: "立会人（F-DORA/E）",
