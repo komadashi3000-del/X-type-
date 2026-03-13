@@ -1504,16 +1504,19 @@ async function renderMyHistory() {
     }
     if (menuKey === "account") renderCurrentAccount();
   }
+  
+function showTypeCatalogPage() {
+  typeDetailPage?.classList.add("hidden");
+  if (typeDetailView) typeDetailView.innerHTML = "";
+  document
+    .querySelectorAll("#menu-type-catalog .type-card")
+    .forEach((el) => el.classList.remove("active"));
+}
 
-  function showTypeCatalogPage() {
-    typeCatalogPage?.classList.remove("hidden");
-    typeDetailPage?.classList.add("hidden");
-  }
-
-  function showTypeDetailPage() {
-    typeCatalogPage?.classList.add("hidden");
-    typeDetailPage?.classList.remove("hidden");
-  }
+function showTypeDetailPage() {
+  typeDetailPage?.classList.remove("hidden");
+  typeDetailPage?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
   function showCompatibilityCatalogPage() {
     compatCatalogPage?.classList.remove("hidden");
@@ -1570,6 +1573,8 @@ function renderTypeDetailsMenu() {
   const keys = Object.keys(groupData);
 
   catalog.innerHTML = "";
+  showTypeCatalogPage();
+
   if (!keys.length) {
     typeDetailView.innerHTML = "<p>この群の詳細データはまだありません。</p>";
     return;
@@ -1579,17 +1584,27 @@ function renderTypeDetailsMenu() {
     const detail = groupData[code];
     if (!detail) return;
 
-      const card = document.createElement("button");
-      card.type = "button";
-      card.className = "type-card";
-      card.innerHTML = `<strong>${code}｜${detail.title}</strong><p>クリックして詳細を表示</p>`;
-      card.addEventListener("click", () => {
-        typeDetailView.innerHTML = detail.body;
-        showTypeDetailPage();
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "type-card";
+    card.innerHTML = `
+      <strong>${code}｜${detail.title}</strong>
+      <p>クリックして下に表示</p>
+    `;
+
+    card.addEventListener("click", () => {
+      catalog.querySelectorAll(".type-card").forEach((el) => {
+        el.classList.remove("active");
       });
-      catalog.appendChild(card);
+
+      card.classList.add("active");
+      typeDetailView.innerHTML = detail.body;
+      showTypeDetailPage();
     });
-  }
+
+    catalog.appendChild(card);
+  });
+}
 
 
   function renderCompatibilityMenu() {
